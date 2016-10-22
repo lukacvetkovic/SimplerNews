@@ -23,11 +23,12 @@ namespace BusinessServices.Implementation
         {
             try
             {
+                news.Created = DateTime.Now;
                 await _mongoDbRepository.AddOne(news);
             }
             catch (Exception)
             {
-                
+
                 throw;
             }
 
@@ -39,6 +40,10 @@ namespace BusinessServices.Implementation
         {
             try
             {
+                foreach (var newsEntity in newsList)
+                {
+                    newsEntity.Created = DateTime.Now;
+                }
                 await _mongoDbRepository.AddMany(newsList);
             }
             catch (Exception)
@@ -53,7 +58,7 @@ namespace BusinessServices.Implementation
         {
             try
             {
-                var result= await _mongoDbRepository.GetAll<NewsEntity>();
+                var result = await _mongoDbRepository.GetAll<NewsEntity>();
 
                 return result.Entities.ToList();
             }
