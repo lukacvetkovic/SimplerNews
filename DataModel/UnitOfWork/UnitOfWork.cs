@@ -18,7 +18,7 @@ namespace DataModel.UnitOfWork
         #region Private member variables...
 
         private SimplerNewsSQLDb _context = null;
-        private GenericRepository<Test> _testRepository;
+        private IGenericRepository<Test> _testRepository;
         #endregion
 
         public UnitOfWork()
@@ -31,12 +31,12 @@ namespace DataModel.UnitOfWork
         /// <summary>
         /// Get/Set Property for product repository.
         /// </summary>
-        public GenericRepository<Test> TestRepository
+        public IGenericRepository<Test> TestRepository
         {
             get
             {
                 if (this._testRepository == null)
-                    this._testRepository = new GenericRepository<Test>(_context);
+                    this._testRepository = new GenericRepositorySQL<Test>(_context);
                 return _testRepository;
             }
         }

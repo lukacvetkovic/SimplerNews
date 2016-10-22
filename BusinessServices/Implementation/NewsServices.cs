@@ -20,7 +20,7 @@ namespace BusinessServices.Implementation
         }
         public async void InsertNews(NewsEntity news)
         {
-            await _mongoDbHelper.InsertData(news,Collections.News);
+            await _mongoDbHelper.InsertData(news,MongoCollections.News);
         }
     }
 }

@@ -13,26 +13,22 @@ namespace DataModel.NoSQLDatabase
         String ConnectionString =
             "mongodb://simplernews:JtYNzd5IBlwj5ZuIPHxHuJSaY0WhFV3JZEj8LnjZOyDIpWrPKGVMaHiaTwJfyXnCSkM4ZzJsZZL3Gas8w2h4Og==@simplernews.documents.azure.com:10250/?ssl=true";
 
-        private static MongoDbHelper instance;
-        private readonly MongoClient client;
-        private IMongoDatabase _db;
+        private static MongoDbHelper _instance;
+        public readonly IMongoDatabase Db;
 
         private MongoDbHelper()
         {
-            client = new MongoClient(ConnectionString);
-            _db = client.GetDatabase("SimplerNews");
+            var client = new MongoClient(ConnectionString);
+            Db = client.GetDatabase("SimplerNews");
         }
 
-        public static MongoDbHelper GetInstanceInstance
-        {
-            get { return instance ?? (instance = new MongoDbHelper()); }
-        }
+        public static MongoDbHelper GetInstanceInstance => _instance ?? (_instance = new MongoDbHelper());
 
         public async Task InsertData<T>(T data, string collection)
         {
             if (data != null)
             {
-                var col = _db.GetCollection<BsonDocument>(collection);
+                var col = Db.GetCollection<BsonDocument>(collection);
 
 
                 await col.InsertOneAsync(data.ToBsonDocument());
@@ -44,7 +40,7 @@ namespace DataModel.NoSQLDatabase
 
             if (data != null)
             {
-                var col = _db.GetCollection<BsonDocument>(collection);
+                var col = Db.GetCollection<BsonDocument>(collection);
 
                 List<BsonDocument> listOfBsonDocuments = new List<BsonDocument>();
 
@@ -62,7 +58,7 @@ namespace DataModel.NoSQLDatabase
 
             if (data != null)
             {
-                var col = _db.GetCollection<BsonDocument>(collection);
+                var col = Db.GetCollection<BsonDocument>(collection);
 
                 await col.ReplaceOneAsync(Builders<BsonDocument>.Filter.Eq("_id", _id), data.ToBsonDocument());
             }
@@ -73,7 +69,7 @@ namespace DataModel.NoSQLDatabase
 
             if (_id != null)
             {
-                var col = _db.GetCollection<BsonDocument>(collection);
+                var col = Db.GetCollection<BsonDocument>(collection);
 
                 await col.DeleteOneAsync(Builders<BsonDocument>.Filter.Eq("_id", _id));
             }
@@ -81,7 +77,7 @@ namespace DataModel.NoSQLDatabase
 
         public async Task<List<BsonDocument>> GetFiltered<T>(String column, String value, string collection)
         {
-            var col = _db.GetCollection<BsonDocument>(collection);
+            var col = Db.GetCollection<BsonDocument>(collection);
             var filter = Builders<BsonDocument>.Filter.Eq(column, value);
             var result = await col.Find(filter).ToListAsync();
 
