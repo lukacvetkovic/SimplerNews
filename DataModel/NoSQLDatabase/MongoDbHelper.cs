@@ -20,7 +20,7 @@ namespace DataModel.NoSQLDatabase
         private MongoDbHelper()
         {
             client = new MongoClient(ConnectionString);
-            _db = client.GetDatabase("SimpleNews");
+            _db = client.GetDatabase("SimplerNews");
         }
 
         public static MongoDbHelper GetInstanceInstance

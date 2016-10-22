@@ -12,23 +12,23 @@ namespace SimplerNews.API.Controllers
 {
     public class TestController : ApiController
     {
-        ITestServices testServices;
+        readonly ITestServices _testServices;
 
         public TestController()
         {
-            this.testServices = ServicesFactory.GetTestService();
+            this._testServices = ServicesFactory.GetTestServices();
         }
 
         [HttpGet]
         public List<TestEntity> GetallTestEntities()
         {
-            return testServices.GetaAllTestEntities();
+            return _testServices.GetaAllTestEntities();
         }
 
         [HttpPost]
         public bool InsertRantomTest()
         {
-            testServices.TestService();
+            _testServices.TestService();
             return true;
         }
     }
