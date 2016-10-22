@@ -55,15 +55,15 @@ namespace SimplerNews.API
             //    consumerKey: "",
             //    consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //    appId: "",
-            //    appSecret: "");
+            app.UseFacebookAuthentication(
+                appId: "1816770078541279",
+                appSecret: "4dba6c34263064d5ed56d891e904ab12");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "300872630365-akf9khgdklk68ejfbsss63mgt947ctsu.apps.googleusercontent.com",
+                ClientSecret = "AKVEyMZWyB325nQU_db1np3E"
+            });
         }
     }
 }
