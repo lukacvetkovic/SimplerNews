@@ -6,6 +6,14 @@
     <edmx:Diagrams>
       <Diagram DiagramId="e86325de87e14355a73ac2c868982b51" Name="Diagram1">
         <EntityTypeShape EntityType="SimplerNewsDbModel.Test" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.AspNetRoles" Width="1.5" PointX="3.75" PointY="2.5" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.AspNetUserClaims" Width="1.5" PointX="8.25" PointY="1" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.AspNetUserLogins" Width="1.5" PointX="8.25" PointY="3.75" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.AspNetUsers" Width="1.5" PointX="6" PointY="1.375" />
+        <AssociationConnector Association="SimplerNewsDbModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="SimplerNewsDbModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="SimplerNewsDbModel.AspNetUserRoles" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

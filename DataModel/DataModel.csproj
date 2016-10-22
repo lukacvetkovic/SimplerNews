@@ -54,6 +54,21 @@
   <ItemGroup>
     <Compile Include="GenericRepository\GenericRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLDatabase\AspNetRoles.cs">
+      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SQLDatabase\AspNetUserClaims.cs">
+      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SQLDatabase\AspNetUserLogins.cs">
+      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SQLDatabase\AspNetUsers.cs">
+      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SQLDatabase\C__MigrationHistory.cs">
+      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="SQLDatabase\SimplerNewsSQLDb.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
