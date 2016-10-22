@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using BusinessEntities.BusinessModels;
 using BusinessServices;
@@ -20,10 +21,24 @@ namespace SimplerNews.API.Controllers
         }
 
         [HttpPost]
-        public bool InsertNews(NewsEntity news)
+        public async Task<bool> InsertNews(NewsEntity news)
         {
-            _newsServices.InsertNews(news);
-            return true;
+            return await _newsServices.InsertNews(news);
+
+        }
+
+        [HttpPost]
+        public async Task<bool> InsertNewsList(NewsEntity[] newsList)
+        {
+            return await _newsServices.InsertNewsList(newsList);
+
+        }
+
+
+        [HttpGet]
+        public async Task<List<NewsEntity>> GetAllNews()
+        {
+            return await _newsServices.GetAllNews();
         }
     }
 }

@@ -6,21 +6,61 @@ using System.Threading.Tasks;
 using BusinessEntities.BusinessModels;
 using BusinessEntities.Enums;
 using BusinessServices.Interface;
+using DataModel.GenericRepository;
 using DataModel.NoSQLDatabase;
 
 namespace BusinessServices.Implementation
 {
     public class NewsServices : INewsServices
     {
-        private readonly MongoDbHelper _mongoDbHelper;
+        private readonly IMongoDbRepository _mongoDbRepository;
 
         public NewsServices()
         {
-            _mongoDbHelper=MongoDbHelper.GetInstanceInstance;
+            _mongoDbRepository = new MongoDbRepository();
         }
-        public async void InsertNews(NewsEntity news)
+        public async Task<bool> InsertNews(NewsEntity news)
         {
-            await _mongoDbHelper.InsertData(news,MongoCollections.News);
+            try
+            {
+                await _mongoDbRepository.AddOne(news);
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+
+            return true;
+
+        }
+
+        public async Task<bool> InsertNewsList(NewsEntity[] newsList)
+        {
+            try
+            {
+                await _mongoDbRepository.AddMany(newsList);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return true;
+        }
+
+        public async Task<List<NewsEntity>> GetAllNews()
+        {
+            try
+            {
+                var result= await _mongoDbRepository.GetAll<NewsEntity>();
+
+                return result.Entities.ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

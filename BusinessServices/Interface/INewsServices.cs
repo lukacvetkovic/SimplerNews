@@ -9,6 +9,9 @@ namespace BusinessServices.Interface
 {
     public interface INewsServices
     {
-        void InsertNews(NewsEntity news);
+        Task<bool> InsertNews(NewsEntity news);
+        Task<bool> InsertNewsList(NewsEntity[] newsList);
+
+        Task<List<NewsEntity>> GetAllNews();
     }
 }
