@@ -12,8 +12,22 @@ namespace BusinessEntities.BusinessModels
         public ObjectId _id { get; set; }
         public string Name { get; set; }
 
-        public String Link{ get; set; }
+        public string Description { get; set; }
 
-        public String NewsType { get; set; }
+        public string VideoLink { get; set; }
+
+        public string[] Categories { get; set; }
+
+        public double Rating { get; set; }
+
+        public int NumberOfViews { get; set; }
+
+        public int NumberOfLikes { get; set; }
+
+        public int NumberOfDislikes { get; set; }
+
+        public DateTime DateOfPublish { get; set; }
+
+        public DateTime Created { get; set; }
     }
 }

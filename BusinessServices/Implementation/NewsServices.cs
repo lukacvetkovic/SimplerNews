@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessEntities.BusinessModels;
+using BusinessEntities.Enums;
 using BusinessServices.Interface;
 using DataModel.NoSQLDatabase;
 
@@ -19,7 +20,7 @@ namespace BusinessServices.Implementation
         }
         public async void InsertNews(NewsEntity news)
         {
-            await _mongoDbHelper.InsertData(news);
+            await _mongoDbHelper.InsertData(news,Collections.News);
         }
     }
 }

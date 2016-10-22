@@ -28,23 +28,23 @@ namespace DataModel.NoSQLDatabase
             get { return instance ?? (instance = new MongoDbHelper()); }
         }
 
-        public async Task InsertData<T>(T data)
+        public async Task InsertData<T>(T data, string collection)
         {
             if (data != null)
             {
-                var col = _db.GetCollection<BsonDocument>("News");
+                var col = _db.GetCollection<BsonDocument>(collection);
 
 
                 await col.InsertOneAsync(data.ToBsonDocument());
             }
         }
 
-        public async Task InsertData<T>(T[] data)
+        public async Task InsertData<T>(T[] data, string collection)
         {
 
             if (data != null)
             {
-                var col = _db.GetCollection<BsonDocument>("News");
+                var col = _db.GetCollection<BsonDocument>(collection);
 
                 List<BsonDocument> listOfBsonDocuments = new List<BsonDocument>();
 
@@ -57,31 +57,31 @@ namespace DataModel.NoSQLDatabase
             }
         }
 
-        public async Task UpdateData<T>(T data, BsonObjectId _id)
+        public async Task UpdateData<T>(T data, BsonObjectId _id, string collection)
         {
 
             if (data != null)
             {
-                var col = _db.GetCollection<BsonDocument>("News");
+                var col = _db.GetCollection<BsonDocument>(collection);
 
                 await col.ReplaceOneAsync(Builders<BsonDocument>.Filter.Eq("_id", _id), data.ToBsonDocument());
             }
         }
 
-        public async Task DeleteOne<T>(BsonObjectId _id)
+        public async Task DeleteOne<T>(BsonObjectId _id, string collection)
         {
 
             if (_id != null)
             {
-                var col = _db.GetCollection<BsonDocument>("News");
+                var col = _db.GetCollection<BsonDocument>(collection);
 
                 await col.DeleteOneAsync(Builders<BsonDocument>.Filter.Eq("_id", _id));
             }
         }
 
-        public async Task<List<BsonDocument>> GetFiltered<T>(String column, String value)
+        public async Task<List<BsonDocument>> GetFiltered<T>(String column, String value, string collection)
         {
-            var col = _db.GetCollection<BsonDocument>("News");
+            var col = _db.GetCollection<BsonDocument>(collection);
             var filter = Builders<BsonDocument>.Filter.Eq(column, value);
             var result = await col.Find(filter).ToListAsync();
 
