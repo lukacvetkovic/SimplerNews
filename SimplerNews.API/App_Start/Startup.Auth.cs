@@ -55,9 +55,9 @@ namespace SimplerNews.API
             //    consumerKey: "",
             //    consumerSecret: "");
 
-            app.UseFacebookAuthentication(
-                appId: "1816770078541279",
-                appSecret: "4dba6c34263064d5ed56d891e904ab12");
+            //app.UseFacebookAuthentication(
+            //    appId: "1816770078541279",
+            //    appSecret: "4dba6c34263064d5ed56d891e904ab12");
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {

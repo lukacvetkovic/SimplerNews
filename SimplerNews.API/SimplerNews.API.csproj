@@ -82,6 +82,10 @@
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Owin.Security.MicrosoftAccount, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
       <Private>True</Private>
@@ -190,9 +194,6 @@
     <Reference Include="Microsoft.Owin.Security.Facebook">
       <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Google">
-      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\YoutubeChannelController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -326,6 +328,10 @@
     <ProjectReference Include="..\BusinessServices\BusinessServices.csproj">
       <Project>{64e5ee30-9b88-4a36-9750-6bc4b9728edf}</Project>
       <Name>BusinessServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataModel\DataModel.csproj">
+      <Project>{60c79860-02e6-4276-9b87-8639da2f5024}</Project>
+      <Name>DataModel</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
