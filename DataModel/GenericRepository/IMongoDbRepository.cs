@@ -105,6 +105,14 @@ namespace DataModel.GenericRepository
         Task<Result> DeleteOne<TEntity>(string id) where TEntity : class, new();
 
         /// <summary>
+        /// A generic delete one method
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<Result> DeleteOne<TEntity>(FilterDefinition<TEntity> filter) where TEntity : class, new();
+
+        /// <summary>
         /// A generic delete many method
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
@@ -161,6 +169,8 @@ namespace DataModel.GenericRepository
         /// <param name="options"></param>
         /// <returns></returns>
         Task<GetOneResult<TEntity>> GetAndUpdateOne<TEntity>(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, FindOneAndUpdateOptions<TEntity, TEntity> options) where TEntity : class, new();
+
+        Task<Result> Replace<TEntity>(FilterDefinition<TEntity> filter, TEntity entity) where TEntity : class, new();
 
         #endregion Find And Update
     }

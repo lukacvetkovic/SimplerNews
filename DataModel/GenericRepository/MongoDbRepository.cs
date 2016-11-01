@@ -263,6 +263,14 @@ namespace DataModel.GenericRepository
             {
                 var collection = GetCollection<TEntity>();
                 var deleteRes = await collection.DeleteOneAsync(filter);
+
+                if (deleteRes.DeletedCount < 1)
+                {
+                    var ex = new Exception();
+                    result.Message = HelperService.NotifyException("DeleteOne", "Some " + typeof(TEntity).Name + "s could not be deleted.", ex);
+                    return result;
+                }
+
                 result.Success = true;
                 result.Message = "OK";
                 return result;
@@ -424,6 +432,25 @@ namespace DataModel.GenericRepository
             {
                 var collection = GetCollection<TEntity>();
                 result.Entity = await collection.FindOneAndUpdateAsync(filter, update, options);
+                result.Success = true;
+                result.Message = "OK";
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Message = HelperService.NotifyException("GetAndUpdateOne", "Exception getting and updating entity: " + typeof(TEntity).Name, ex);
+                return result;
+            }
+        }
+
+        public async Task<Result> Replace<TEntity>(FilterDefinition<TEntity> filter, TEntity entity) where TEntity : class, new()
+        {
+            var result = new Result();
+            try
+            {
+                var collection = GetCollection<TEntity>();
+                var updateResult = await collection.ReplaceOneAsync(filter, entity);
+      
                 result.Success = true;
                 result.Message = "OK";
                 return result;

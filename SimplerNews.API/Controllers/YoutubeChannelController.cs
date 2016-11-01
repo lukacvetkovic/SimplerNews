@@ -13,6 +13,7 @@ namespace SimplerNews.API.Controllers
 {
     public class YoutubeChannelController : ApiController
     {
+
         private readonly YoutubeChannelsService _youtubeChannelService;
 
         public YoutubeChannelController()
@@ -20,30 +21,80 @@ namespace SimplerNews.API.Controllers
             _youtubeChannelService = new YoutubeChannelsService();
         }
 
+        // GET: YoutubeChannel
         [HttpGet]
-        public async Task<List<YoutubeChannel>> Channels()
+        [Route("api/YoutubeChannel")]
+        public async Task<IHttpActionResult> Index()
         {
-            return await _youtubeChannelService.GetYoutubeChannels();
+            return Ok(await _youtubeChannelService.GetYoutubeChannels());
         }
 
+        // GET: YoutubeChannel/Details/5
         [HttpGet]
-        public async Task<YoutubeChannel> Channels(string name)
+        [Route("api/YoutubeChannel")]
+        public async Task<IHttpActionResult> Details(string name)
         {
-            return await _youtubeChannelService.GetYoutubeChannel(name);
+            var channel = await _youtubeChannelService.GetYoutubeChannel(name);
+
+            if (channel != null)
+            {
+                return Ok(channel);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
+        // GET: YoutubeChannel/Create
         [HttpPost]
-        [ActionName("Channels")]
-        public async Task<Result> ChannelsCreate(YoutubeChannel channel)
+        [Route("api/YoutubeChannel")]
+        public async Task<IHttpActionResult> Create(YoutubeChannel channel)
         {
-            return await _youtubeChannelService.InsertYoutubeChannel(channel);
+            var result = await _youtubeChannelService.InsertYoutubeChannel(channel);
+
+            if (result.Success)
+            {
+                return Ok(channel);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
-        [HttpDelete]
-        [ActionName("Channels")]
-        public async Task<Result> ChannelsDelete(YoutubeChannel channel)
+        // GET: YoutubeChannel/Edit/5
+        [HttpPut]
+        [Route("api/YoutubeChannel/{id}")]
+        public async Task<IHttpActionResult> Edit(string id, YoutubeChannel channel)
         {
-            return await _youtubeChannelService.DeleteYoutubeChannel(channel);
+            var result = await _youtubeChannelService.EdditYoutubeChannel(id, channel);
+
+            if (result.Success)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        // GET: YoutubeChannel/Delete/5
+        [HttpDelete]
+        [Route("api/YoutubeChannel/{id}")]
+        public async Task<IHttpActionResult> Delete(string id)
+        {
+            var result = await _youtubeChannelService.DeleteYoutubeChannel(id);
+
+            if (result.Success)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

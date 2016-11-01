@@ -8,6 +8,7 @@ using BusinessServices.Interface;
 using DataModel.GenericRepository;
 using DataModel.NoSQLDatabase;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace BusinessServices.Implementation
 {
@@ -39,7 +40,7 @@ namespace BusinessServices.Implementation
         {
             try
             {
-                var filter = Builders<YoutubeChannel>.Filter.Where(p=>p.Name==name);
+                var filter = Builders<YoutubeChannel>.Filter.Where(p => p.Name == name);
                 var result = await _mongoDbRepository.GetOne<YoutubeChannel> (filter);
 
                 return result.Entity;
@@ -62,13 +63,26 @@ namespace BusinessServices.Implementation
             }
         }
 
-        public async Task<Result> DeleteYoutubeChannel(YoutubeChannel channel)
+        public async Task<Result> EdditYoutubeChannel(string id, YoutubeChannel channel)
         {
             try
             {
-                var storedChannel = await GetYoutubeChannel(channel.Name);
-         
-                return await _mongoDbRepository.DeleteOne<YoutubeChannel>(storedChannel._id.ToString());
+                var filter = Builders<YoutubeChannel>.Filter.Where(p => p._id == ObjectId.Parse(id));
+
+                return await _mongoDbRepository.Replace(filter, channel);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+            
+        public async Task<Result> DeleteYoutubeChannel(string id)
+        {
+            try
+            {
+                var filter = Builders<YoutubeChannel>.Filter.Where(p => p._id == ObjectId.Parse(id));
+                return await _mongoDbRepository.DeleteOne<YoutubeChannel>(filter);
             }
             catch (Exception)
             {
