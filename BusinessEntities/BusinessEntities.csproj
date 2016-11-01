@@ -76,10 +76,11 @@
   <ItemGroup>
     <Compile Include="BusinessModels\NewsEntity.cs" />
     <Compile Include="BusinessModels\YoutubeChannel.cs" />
-    <Compile Include="Enums\MongoCollections.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Enums\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

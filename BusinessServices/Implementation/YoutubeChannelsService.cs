@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessEntities.BusinessModels;
-using BusinessEntities.Enums;
 using BusinessServices.Interface;
 using DataModel.GenericRepository;
 using DataModel.NoSQLDatabase;
+using MongoDB.Driver;
 
 namespace BusinessServices.Implementation
 {
@@ -39,9 +39,10 @@ namespace BusinessServices.Implementation
         {
             try
             {
-                var result = await _mongoDbRepository.GetAll<YoutubeChannel>();
+                var filter = Builders<YoutubeChannel>.Filter.Where(p=>p.Name==name);
+                var result = await _mongoDbRepository.GetOne<YoutubeChannel> (filter);
 
-                return result.Entities.Where(c => c.Name.Equals(name)).FirstOrDefault();
+                return result.Entity;
             }
             catch (Exception)
             {
@@ -67,7 +68,7 @@ namespace BusinessServices.Implementation
             {
                 var storedChannel = await GetYoutubeChannel(channel.Name);
          
-                return await _mongoDbRepository.DeleteOne<YoutubeChannel>(storedChannel.Id.ToString());
+                return await _mongoDbRepository.DeleteOne<YoutubeChannel>(storedChannel._id.ToString());
             }
             catch (Exception)
             {

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessEntities.BusinessModels;
-using BusinessEntities.Enums;
 using BusinessServices.Interface;
 using DataModel.GenericRepository;
 using DataModel.NoSQLDatabase;

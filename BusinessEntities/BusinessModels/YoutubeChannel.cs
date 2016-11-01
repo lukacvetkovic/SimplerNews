@@ -9,7 +9,7 @@ namespace BusinessEntities.BusinessModels
 {
     public class YoutubeChannel
     {
-        public ObjectId Id { get; set; }
+        public ObjectId _id { get; set; }
 
         public string Name { get; set; }
 

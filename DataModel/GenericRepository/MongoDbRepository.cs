@@ -44,7 +44,7 @@ namespace DataModel.GenericRepository
             try
             {
                 var collection = GetCollection<TEntity>();
-                var entity = await collection.Find(filter).SingleOrDefaultAsync();
+                var entity = await collection.Find(filter).FirstOrDefaultAsync();
                 if (entity != null)
                 {
                     res.Entity = entity;
