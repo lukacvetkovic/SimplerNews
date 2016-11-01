@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,6 +57,20 @@ namespace BusinessServices.Implementation
         {
             try
             {
+                var requestURL = "https://www.googleapis.com/youtube/v3/channels?" +
+                    "part=contentDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw" +
+                    "&forUsername=" + channel.Name;
+
+                var request = WebRequest.Create(requestURL);
+                var responseStream = request.GetResponse().GetResponseStream();
+
+                using (StreamReader reader = new StreamReader(responseStream))
+                {
+                    var jsonString = reader.ReadToEnd();
+
+                    channel.Details = YoutubeChannelDetails.fromJSON(jsonString);
+                }
+
                 return await _mongoDbRepository.AddOne(channel);
             }
             catch (Exception)

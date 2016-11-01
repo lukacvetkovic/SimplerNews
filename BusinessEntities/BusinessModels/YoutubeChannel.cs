@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace BusinessEntities.BusinessModels
 {
@@ -11,9 +12,12 @@ namespace BusinessEntities.BusinessModels
     {
         public ObjectId _id { get; set; }
 
+        [MongoDB.Bson.Serialization.Attributes.BsonRequired]
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public YoutubeChannelDetails Details { get; set; }
 
     }
 }
