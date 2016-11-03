@@ -172,6 +172,8 @@ namespace DataModel.GenericRepository
 
         Task<Result> Replace<TEntity>(FilterDefinition<TEntity> filter, TEntity entity) where TEntity : class, new();
 
+        Task<GetOneResult<TEntity>> Find<TEntity>(FilterDefinition<TEntity> filter, SortDefinition<TEntity> sort) where TEntity : class, new();
+
         #endregion Find And Update
     }
 }

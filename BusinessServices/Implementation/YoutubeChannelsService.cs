@@ -57,25 +57,30 @@ namespace BusinessServices.Implementation
         {
             try
             {
-                var requestURL = "https://www.googleapis.com/youtube/v3/channels?" +
-                    "part=contentDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw" +
-                    "&forUsername=" + channel.Name;
-
-                var request = WebRequest.Create(requestURL);
-                var responseStream = request.GetResponse().GetResponseStream();
-
-                using (StreamReader reader = new StreamReader(responseStream))
-                {
-                    var jsonString = reader.ReadToEnd();
-
-                    channel.Details = YoutubeChannelDetails.fromJSON(jsonString);
-                }
+                channel.Details = await getChannelDetails(channel.Name);
 
                 return await _mongoDbRepository.AddOne(channel);
             }
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+        async Task<YoutubeChannelDetails> getChannelDetails(string channelName)
+        {
+            var requestURL = "https://www.googleapis.com/youtube/v3/channels?" +
+                   "part=contentDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw" +
+                   "&forUsername=" + channelName;
+
+            var request = WebRequest.Create(requestURL);
+            var responseStream = request.GetResponse().GetResponseStream();
+
+            using (StreamReader reader = new StreamReader(responseStream))
+            {
+                var jsonString = reader.ReadToEnd();
+
+                return YoutubeChannelDetails.fromJSON(jsonString);
             }
         }
 

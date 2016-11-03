@@ -462,6 +462,27 @@ namespace DataModel.GenericRepository
             }
         }
 
+        public async Task<GetOneResult<TEntity>> Find<TEntity>(FilterDefinition<TEntity> filter, SortDefinition<TEntity> sort) where TEntity : class, new()
+        {
+            var result = new GetOneResult<TEntity>();
+            try
+            {
+                var collection = GetCollection<TEntity>();
+                var updateResult = collection.Find(filter).Limit(1);
+                result.Entity = updateResult.FirstOrDefault();
+
+                result.Success = true;
+                result.Message = "OK";
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Message = HelperService.NotifyException("GetAndUpdateOne", "Exception getting and updating entity: " + typeof(TEntity).Name, ex);
+                return result;
+            }
+        }
+
         #endregion Find And Update
 
 

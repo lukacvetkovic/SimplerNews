@@ -11,8 +11,7 @@ namespace BusinessEntities.BusinessModels
     public class YoutubeChannel
     {
         public ObjectId _id { get; set; }
-
-        [MongoDB.Bson.Serialization.Attributes.BsonRequired]
+        
         public string Name { get; set; }
 
         public string Description { get; set; }

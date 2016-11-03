@@ -22,15 +22,24 @@ namespace BusinessEntities.BusinessModels
 
             var data = serializer.Deserialize<Dictionary<string, Object>>(json);
 
-            var items = (Dictionary<string, object>)((System.Collections.ArrayList)data["items"])[0];
+            var items = (System.Collections.ArrayList)data["items"];
 
-            string id = (string)items["id"];
-            string uploadPlaylistId = (string)((Dictionary<string, object>)((Dictionary<string, object>)items["contentDetails"])["relatedPlaylists"])["uploads"];
+            foreach (Dictionary<string, object> item in items)
+            {
+                if ((string)item["kind"] == "youtube#channel")
+                {
+                    string id = (string)item["id"];
+                    string uploadPlaylistId = (string)((Dictionary<string, object>)((Dictionary<string, object>)item["contentDetails"])["relatedPlaylists"])["uploads"];
 
-            return new YoutubeChannelDetails() {
-                YoutubeChannelId = id,
-                UploadPlaylistId = uploadPlaylistId
-            };
+                    return new YoutubeChannelDetails()
+                    {
+                        YoutubeChannelId = id,
+                        UploadPlaylistId = uploadPlaylistId
+                    };
+                }
+            }
+
+            return null;
         }
 
     }
