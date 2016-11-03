@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using BusinessEntities.BusinessModels;
 
 namespace DataModel.NoSQLDatabase
 {
@@ -31,7 +32,18 @@ namespace DataModel.NoSQLDatabase
         /// <returns></returns>
         public IMongoCollection<TEntity> GetCollection<TEntity>()
         {
-            return Db.GetCollection<TEntity>(typeof(TEntity).Name.ToLower() + "s");
+            var collection = Db.GetCollection<TEntity>(typeof(TEntity).Name.ToLower() + "s");
+
+            if (typeof(TEntity) == typeof(YoutubeChannel))
+            {
+                var options = new CreateIndexOptions() { Unique = true };
+                var field = new StringFieldDefinition<TEntity>("Name");
+                var indexDefinition = new IndexKeysDefinitionBuilder<TEntity>().Ascending(field);
+
+                collection.Indexes.CreateOne(indexDefinition, options);
+            }
+            
+            return collection;
         }
     }
 }

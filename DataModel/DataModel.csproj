@@ -129,7 +129,12 @@
     </Compile>
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessEntities\BusinessEntities.csproj">
+      <Project>{b4fa454e-e75b-4a9d-9cdc-0d67bb836123}</Project>
+      <Name>BusinessEntities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="SQLDatabase\SimplerNewsSQLDb.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
