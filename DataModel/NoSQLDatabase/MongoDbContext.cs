@@ -11,7 +11,7 @@ namespace DataModel.NoSQLDatabase
     public class MongoDbContext
     {
         String ConnectionString =
-            "mongodb://simplernews:JtYNzd5IBlwj5ZuIPHxHuJSaY0WhFV3JZEj8LnjZOyDIpWrPKGVMaHiaTwJfyXnCSkM4ZzJsZZL3Gas8w2h4Og==@simplernews.documents.azure.com:10250/?ssl=true";
+            "mongodb://localhost:27017/mydb";
 
         private static MongoDbContext _instance;
         public readonly IMongoDatabase Db;
