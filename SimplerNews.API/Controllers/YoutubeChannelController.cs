@@ -24,77 +24,65 @@ namespace SimplerNews.API.Controllers
         // GET: YoutubeChannel
         [HttpGet]
         [Route("api/YoutubeChannel")]
-        public async Task<IHttpActionResult> Index()
+        public IHttpActionResult Index()
         {
-            return Ok(await _youtubeChannelService.GetYoutubeChannels());
+            return Ok(_youtubeChannelService.GetYoutubeChannels());
         }
 
         // GET: YoutubeChannel/Details/5
         [HttpGet]
         [Route("api/YoutubeChannel")]
-        public async Task<IHttpActionResult> Details(string name)
+        public IHttpActionResult Details(string name)
         {
-            var channel = await _youtubeChannelService.GetYoutubeChannel(name);
+            var channel = _youtubeChannelService.GetYoutubeChannel(name);
 
             if (channel != null)
             {
                 return Ok(channel);
             }
-            else
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
         // GET: YoutubeChannel/Create
         [HttpPost]
         [Route("api/YoutubeChannel")]
-        public async Task<IHttpActionResult> Create(YoutubeChannel channel)
+        public IHttpActionResult Create(YoutubeChannelDto channel)
         {
-            var result = await _youtubeChannelService.InsertYoutubeChannel(channel);
+            var result = _youtubeChannelService.InsertYoutubeChannel(channel);
 
-            if (result.Success)
+            if (result != 0)
             {
                 return Ok(channel);
             }
-            else
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
         // GET: YoutubeChannel/Edit/5
         [HttpPut]
         [Route("api/YoutubeChannel/{id}")]
-        public async Task<IHttpActionResult> Edit(string id, YoutubeChannel channel)
+        public IHttpActionResult Edit(int id, YoutubeChannelDto channel)
         {
-            var result = await _youtubeChannelService.EdditYoutubeChannel(id, channel);
+            var result = _youtubeChannelService.EdditYoutubeChannel(id, channel);
 
-            if (result.Success)
+            if (result)
             {
                 return Ok();
             }
-            else
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
         // GET: YoutubeChannel/Delete/5
         [HttpDelete]
         [Route("api/YoutubeChannel/{id}")]
-        public async Task<IHttpActionResult> Delete(string id)
+        public IHttpActionResult Delete(int id)
         {
-            var result = await _youtubeChannelService.DeleteYoutubeChannel(id);
+            var result = _youtubeChannelService.DeleteYoutubeChannel(id);
 
-            if (result.Success)
+            if (result)
             {
                 return Ok();
             }
-            else
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
     }
 }

@@ -25,17 +25,17 @@ namespace SimplerNews.API.Controllers
         // GET: Videos
         [HttpGet]
         [Route("api/Videos")]
-        public async Task<IHttpActionResult> Index()
+        public IHttpActionResult Index()
         {
-            return Ok(await _videosService.get());
+            return Ok(_videosService.Get());
         }
 
         // GET: Videos
         [HttpGet]
         [Route("api/Videos/new")]
-        public async Task<IHttpActionResult> NewVideos()
+        public IHttpActionResult NewVideos()
         {
-            var success = await _videosService.getNewVideos();
+            var success = _videosService.GetNewVideos();
 
             return Ok();
         }

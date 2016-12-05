@@ -12,9 +12,12 @@ namespace DataModel.SQLDatabase
     using System;
     using System.Collections.Generic;
     
-    public partial class Test
+    public partial class YoutubeChannel
     {
         public int Id { get; set; }
-        public string Nam { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string YoutubeChannelId { get; set; }
+        public string UploadPlaylistId { get; set; }
     }
 }

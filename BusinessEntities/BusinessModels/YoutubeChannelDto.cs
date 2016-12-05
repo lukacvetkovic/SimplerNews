@@ -8,15 +8,17 @@ using MongoDB.Driver;
 
 namespace BusinessEntities.BusinessModels
 {
-    public class YoutubeChannel
+    public class YoutubeChannelDto
     {
-        public ObjectId _id { get; set; }
+        public int Id { get; set; }
         
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        public YoutubeChannelDetails Details { get; set; }
+        public string YoutubeChannelId { get; set; }
+
+        public string UploadPlaylistId { get; set; }
 
     }
 }

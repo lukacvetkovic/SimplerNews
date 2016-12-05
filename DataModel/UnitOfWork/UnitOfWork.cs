@@ -18,7 +18,9 @@ namespace DataModel.UnitOfWork
         #region Private member variables...
 
         private SimplerNewsSQLDb _context = null;
-        private IGenericRepository<Test> _testRepository;
+        private IGenericRepository<UserInformation> _userInformationRepository;
+        private IGenericRepository<YoutubeChannel> _youtubeChannelRepository;
+        private IGenericRepository<Video> _videoRepository;
         #endregion
 
         public UnitOfWork()
@@ -31,13 +33,33 @@ namespace DataModel.UnitOfWork
         /// <summary>
         /// Get/Set Property for product repository.
         /// </summary>
-        public IGenericRepository<Test> TestRepository
+        public IGenericRepository<UserInformation> UserInformationRepository
         {
             get
             {
-                if (this._testRepository == null)
-                    this._testRepository = new GenericRepositorySQL<Test>(_context);
-                return _testRepository;
+                if (this._userInformationRepository == null)
+                    this._userInformationRepository = new GenericRepositorySQL<UserInformation>(_context);
+                return _userInformationRepository;
+            }
+        }
+
+        public IGenericRepository<YoutubeChannel> YoutubeChannelRepository
+        {
+            get
+            {
+                if (this._youtubeChannelRepository == null)
+                    this._youtubeChannelRepository = new GenericRepositorySQL<YoutubeChannel>(_context);
+                return _youtubeChannelRepository;
+            }
+        }
+
+        public IGenericRepository<Video> VideoRepository
+        {
+            get
+            {
+                if (this._videoRepository == null)
+                    this._videoRepository = new GenericRepositorySQL<Video>(_context);
+                return _videoRepository;
             }
         }
         #endregion

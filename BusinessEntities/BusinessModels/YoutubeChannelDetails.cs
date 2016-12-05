@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using System.Web.Script.Serialization;
-using Newtonsoft.Json;
 
 namespace BusinessEntities.BusinessModels
 {
@@ -16,7 +14,7 @@ namespace BusinessEntities.BusinessModels
         public string UploadPlaylistId { get; set; }
 
 
-        public static YoutubeChannelDetails fromJSON(string json)
+        public static YoutubeChannelDetails FromJson(string json)
         {
             var serializer = new JavaScriptSerializer();
 
@@ -41,6 +39,5 @@ namespace BusinessEntities.BusinessModels
 
             return null;
         }
-
     }
 }

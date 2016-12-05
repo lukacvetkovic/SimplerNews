@@ -1,73 +1,87 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
+using AutoMapper;
 using BusinessEntities.BusinessModels;
-using BusinessServices.Interface;
-using DataModel.GenericRepository;
-using DataModel.NoSQLDatabase;
-using MongoDB.Driver;
-using MongoDB.Bson;
+using DataModel.SQLDatabase;
+using DataModel.UnitOfWork;
+
+
 
 namespace BusinessServices.Implementation
 {
     public class YoutubeChannelsService
     {
 
-        private readonly IMongoDbRepository _mongoDbRepository;
+        private readonly UnitOfWork _unitOfWork;
 
         public YoutubeChannelsService()
         {
-            _mongoDbRepository = new MongoDbRepository();
+            _unitOfWork = new UnitOfWork();
         }
 
-        public async Task<List<YoutubeChannel>> GetYoutubeChannels()
+        public List<YoutubeChannelDto> GetYoutubeChannels()
         {
-            try
-            {
-                var result = await _mongoDbRepository.GetAll<YoutubeChannel>();
+            var channels = _unitOfWork.YoutubeChannelRepository.GetAll();
 
-                return result.Entities.ToList();
-            }
-            catch (Exception)
+            if (channels.Any())
             {
-                throw;
+                Mapper.Initialize(cfg => cfg.CreateMap<YoutubeChannel, YoutubeChannelDto>());
+
+                List<YoutubeChannelDto> dtoList = Mapper.Map<List<YoutubeChannelDto>>(channels);
+
+                return dtoList;
             }
+            return null;
         }
 
-        public async Task<YoutubeChannel> GetYoutubeChannel(string name)
+        public YoutubeChannelDto GetYoutubeChannel(string name)
         {
-            try
-            {
-                var filter = Builders<YoutubeChannel>.Filter.Where(p => p.Name == name);
-                var result = await _mongoDbRepository.GetOne<YoutubeChannel> (filter);
+            var channel = _unitOfWork.YoutubeChannelRepository.GetSingle(p => p.Name == name);
 
-                return result.Entity;
-            }
-            catch (Exception)
+            if (channel != null)
             {
-                throw;
+                Mapper.Initialize(cfg => cfg.CreateMap<YoutubeChannel, YoutubeChannelDto>());
+
+                YoutubeChannelDto dto = Mapper.Map<YoutubeChannelDto>(channel);
+
+                return dto;
             }
+
+            return null;
         }
 
-        public async Task<Result> InsertYoutubeChannel(YoutubeChannel channel)
+        public int InsertYoutubeChannel(YoutubeChannelDto channelDto)
         {
-            try
+            using (var scope = new TransactionScope())
             {
-                channel.Details = await getChannelDetails(channel.Name);
+                var details = GetChannelDetails(channelDto.Name);
 
-                return await _mongoDbRepository.AddOne(channel);
-            }
-            catch (Exception)
-            {
-                throw;
+                channelDto.YoutubeChannelId = details.YoutubeChannelId;
+                channelDto.UploadPlaylistId = details.UploadPlaylistId;
+
+                var channel = new YoutubeChannel()
+                {
+                    YoutubeChannelId = channelDto.YoutubeChannelId,
+                    Description = channelDto.Description,
+                    Name = channelDto.Name,
+                    Id = channelDto.Id,
+                    UploadPlaylistId = channelDto.UploadPlaylistId
+                };
+
+                _unitOfWork.YoutubeChannelRepository.Insert(channel);
+                _unitOfWork.Save();
+
+                scope.Complete();
+
+                return channel.Id;
             }
         }
 
-        async Task<YoutubeChannelDetails> getChannelDetails(string channelName)
+        public YoutubeChannelDetails GetChannelDetails(string channelName)
         {
             var requestURL = "https://www.googleapis.com/youtube/v3/channels?" +
                    "part=contentDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw" +
@@ -80,35 +94,53 @@ namespace BusinessServices.Implementation
             {
                 var jsonString = reader.ReadToEnd();
 
-                return YoutubeChannelDetails.fromJSON(jsonString);
+                return YoutubeChannelDetails.FromJson(jsonString);
             }
         }
 
-        public async Task<Result> EdditYoutubeChannel(string id, YoutubeChannel channel)
+        public bool EdditYoutubeChannel(int id, YoutubeChannelDto channelDto)
         {
-            try
+            var success = false;
+            if (channelDto != null)
             {
-                var filter = Builders<YoutubeChannel>.Filter.Where(p => p._id == ObjectId.Parse(id));
-
-                return await _mongoDbRepository.Replace(filter, channel);
+                using (var scope = new TransactionScope())
+                {
+                    var channel = _unitOfWork.YoutubeChannelRepository.GetByID(id);
+                    if (channel != null)
+                    {
+                        channel.Name = channelDto.Name;
+                        channel.Description = channelDto.Description;
+                        channel.UploadPlaylistId = channelDto.UploadPlaylistId;
+                        channel.YoutubeChannelId = channel.YoutubeChannelId;
+                        _unitOfWork.YoutubeChannelRepository.Update(channel);
+                        _unitOfWork.Save();
+                        scope.Complete();
+                        success = true;
+                    }
+                }
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return success;
         }
-            
-        public async Task<Result> DeleteYoutubeChannel(string id)
+
+        public bool DeleteYoutubeChannel(int channelId)
         {
-            try
+            var success = false;
+            if (channelId > 0)
             {
-                var filter = Builders<YoutubeChannel>.Filter.Where(p => p._id == ObjectId.Parse(id));
-                return await _mongoDbRepository.DeleteOne<YoutubeChannel>(filter);
+                using (var scope = new TransactionScope())
+                {
+                    var quote = _unitOfWork.YoutubeChannelRepository.GetByID(channelId);
+                    if (quote != null)
+                    {
+
+                        _unitOfWork.YoutubeChannelRepository.Delete(quote);
+                        _unitOfWork.Save();
+                        scope.Complete();
+                        success = true;
+                    }
+                }
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return success;
         }
 
     }

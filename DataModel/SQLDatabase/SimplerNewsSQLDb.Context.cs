@@ -25,11 +25,13 @@ namespace DataModel.SQLDatabase
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Test> Test { get; set; }
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<UserInformation> UserInformation { get; set; }
+        public virtual DbSet<Video> Video { get; set; }
+        public virtual DbSet<YoutubeChannel> YoutubeChannel { get; set; }
     }
 }

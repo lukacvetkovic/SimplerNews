@@ -75,10 +75,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessModels\NewsEntity.cs" />
-    <Compile Include="BusinessModels\Video.cs" />
-    <Compile Include="BusinessModels\YoutubeChannel.cs" />
+    <Compile Include="BusinessModels\VideoDto.cs" />
     <Compile Include="BusinessModels\YoutubeChannelDetails.cs" />
+    <Compile Include="BusinessModels\YoutubeChannelDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

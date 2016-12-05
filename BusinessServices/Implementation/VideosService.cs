@@ -1,52 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Net;
 using System.IO;
 using System.Threading.Tasks;
 using BusinessEntities.BusinessModels;
 using System.Web.Script.Serialization;
-using Newtonsoft.Json;
-using BusinessEntities.BusinessModels;
-using DataModel.GenericRepository;
-using MongoDB.Driver;
-using MongoDB.Bson;
+using AutoMapper;
+using DataModel.SQLDatabase;
+using DataModel.UnitOfWork;
 
 namespace BusinessServices.Implementation
 {
     public class VideosService
     {
 
-        private readonly IMongoDbRepository _mongoDbRepository;
+        private readonly UnitOfWork _unitOfWork;
 
         public VideosService()
         {
-            _mongoDbRepository = new MongoDbRepository();
+            _unitOfWork = new UnitOfWork();
         }
 
-        public async Task<List<Video>> get()
+        public List<VideoDto> Get()
         {
-            return (await _mongoDbRepository.GetAll<Video>()).Entities.ToList();
-        }
+            var videos = _unitOfWork.VideoRepository.GetAll().ToList();
 
-        public async Task<bool> getNewVideos()
-        {
-            var channels = await new YoutubeChannelsService().GetYoutubeChannels();
-
-            foreach (YoutubeChannel channel in channels)
+            if (videos.Any())
             {
-                var details = channel.Details;
+                Mapper.Initialize(cfg => cfg.CreateMap<Video, VideoDto>());
 
-                if (details != null)
-                {
-                    var requestURL = "https://www.googleapis.com/youtube/v3/playlistItems?" +
-                      "part=id,contentDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw&maxResults=50" +
-                      "&playlistId=" + details.UploadPlaylistId;
+                List<VideoDto> dtoList = Mapper.Map<List<VideoDto>>(videos);
 
-                    var request = WebRequest.Create(requestURL);
-                    var responseStream = request.GetResponse().GetResponseStream();
+                return dtoList;
 
+            }
+
+            return null;
+        }
+        public bool GetNewVideos()
+        {
+            var channels = _unitOfWork.YoutubeChannelRepository.GetAll().ToList();
+
+            Mapper.Initialize(cfg => cfg.CreateMap<YoutubeChannel, YoutubeChannelDto>());
+
+            List<YoutubeChannelDto> channelsDtos = Mapper.Map<List<YoutubeChannelDto>>(channels);
+
+            foreach (YoutubeChannelDto channel in channelsDtos)
+            {
+
+
+                var requestURL = "https://www.googleapis.com/youtube/v3/playlistItems?" +
+                  "part=id,contentDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw&maxResults=50" +
+                  "&playlistId=" + channel.UploadPlaylistId;
+
+                var request = WebRequest.Create(requestURL);
+                var responseStream = request.GetResponse().GetResponseStream();
+
+                if (responseStream != null)
                     using (StreamReader reader = new StreamReader(responseStream))
                     {
                         var jsonString = reader.ReadToEnd();
@@ -63,23 +74,27 @@ namespace BusinessServices.Implementation
                             videoIds.Add((string)((Dictionary<string, object>)video["contentDetails"])["videoId"]);
                         }
 
-                        var videos = await getVideos(videoIds, await getLatestVideoFrom(channel));
+                        var videos = GetVideos(videoIds, GetLatestVideoFrom(channel));
 
-                        _mongoDbRepository.AddMany<Video>(videos.ToArray());
+                        foreach (var videoDto in videos)
+                        {
+                            _unitOfWork.VideoRepository.Insert(new Video() { Description = videoDto.Description, PublishedAt = videoDto.PublishedAt, Title = videoDto.Title, YoutubeChannelId = videoDto.YoutubeChannelId, YoutubeChannelTitle = videoDto.YoutubeChannelTitle, YoutubeId = videoDto.YoutubeId });
+                        }
+                        _unitOfWork.Save();
+
                     }
-                }
             }
 
-           
+
             return true;
         }
 
-        async Task<List<Video>> getVideos(List<string> ids, Video lastVideo)
+        public List<VideoDto> GetVideos(List<string> ids, VideoDto lastVideo)
         {
-            var requestURL = "https://www.googleapis.com/youtube/v3/videos" + 
+            var requestURL = "https://www.googleapis.com/youtube/v3/videos" +
                 "?part=id,recordingDetails,snippet,statistics,topicDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw" +
                 "&id=" + string.Join(",", ids);
-        
+
             var request = WebRequest.Create(requestURL);
             var responseStream = request.GetResponse().GetResponseStream();
 
@@ -93,13 +108,13 @@ namespace BusinessServices.Implementation
 
                 var videoData = (System.Collections.ArrayList)data["items"];
 
-                var videos = new List<Video>();
+                var videos = new List<VideoDto>();
 
                 foreach (Dictionary<string, object> video in videoData)
                 {
-                    var videoObject = Video.fromJSON(video);
+                    var videoObject = VideoDto.FromJson(video);
 
-                    if (lastVideo == null || lastVideo.publishedAt < videoObject.publishedAt)
+                    if (lastVideo == null || lastVideo.PublishedAt < videoObject.PublishedAt)
                     {
                         videos.Add(videoObject);
                     }
@@ -113,21 +128,23 @@ namespace BusinessServices.Implementation
             }
         }
 
-        async Task<Video> getLatestVideoFrom(YoutubeChannel channel)
+        public VideoDto GetLatestVideoFrom(YoutubeChannelDto channel)
         {
-            if (channel.Details != null)
-            {
-                var filter = Builders<Video>.Filter.Where(p => p.youtubeChannelId == channel.Details.YoutubeChannelId);
-                var sort = Builders<Video>.Sort.Descending(p => p.publishedAt);
 
-                var video = await _mongoDbRepository.Find(filter, sort);
-
-                return video.Entity;
-            } 
-            else
+            var video =
+                _unitOfWork.VideoRepository.GetMany(p => p.YoutubeChannelId == channel.YoutubeChannelId)
+                    .OrderByDescending(q => q.Id)
+                    .FirstOrDefault();
+            if (video != null)
             {
-                return null;
+                Mapper.Initialize(cfg => cfg.CreateMap<Video, VideoDto>());
+
+                VideoDto dto = Mapper.Map<VideoDto>(video);
+
+                return dto;
             }
+
+            return null;
 
         }
 
