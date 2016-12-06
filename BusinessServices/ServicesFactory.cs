@@ -10,7 +10,7 @@ namespace BusinessServices
             return new VideosService();
         }
 
-        public static IYoutubeChannelsService GetNewsServices()
+        public static IYoutubeChannelsService GetYoutubeChannelsServices()
         {
             return new YoutubeChannelsService();
         }

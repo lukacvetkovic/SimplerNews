@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataModel", "DataModel\DataModel.csproj", "{60C79860-02E6-4276-9B87-8639DA2F5024}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessServices", "BusinessServices\BusinessServices.csproj", "{64E5EE30-9B88-4A36-9750-6BC4B9728EDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplerNews.API", "SimplerNews.API\SimplerNews.API.csproj", "{46C5F410-B4B1-438C-9CA8-51E8C3185AE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessServices.Tests", "BusinessServices.Tests\BusinessServices.Tests.csproj", "{89331804-5223-4A6B-9AD1-70865E2349CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{46C5F410-B4B1-438C-9CA8-51E8C3185AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46C5F410-B4B1-438C-9CA8-51E8C3185AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46C5F410-B4B1-438C-9CA8-51E8C3185AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89331804-5223-4A6B-9AD1-70865E2349CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89331804-5223-4A6B-9AD1-70865E2349CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89331804-5223-4A6B-9AD1-70865E2349CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89331804-5223-4A6B-9AD1-70865E2349CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
