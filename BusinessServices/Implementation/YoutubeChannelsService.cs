@@ -41,7 +41,7 @@ namespace BusinessServices.Implementation
 
         public YoutubeChannelDto GetYoutubeChannel(string name)
         {
-            var channel = _unitOfWork.YoutubeChannelRepository.GetSingle(p => p.Name == name);
+            var channel = _unitOfWork.YoutubeChannelRepository.GetFirst(p => p.Name == name);
 
             if (channel != null)
             {
@@ -59,10 +59,13 @@ namespace BusinessServices.Implementation
         {
             using (var scope = new TransactionScope())
             {
-                var details = GetChannelDetails(channelDto.Name);
+                if (channelDto.UploadPlaylistId == null && channelDto.YoutubeChannelId == null)
+                {
+                    var details = GetChannelDetails(channelDto.Name);
 
-                channelDto.YoutubeChannelId = details.YoutubeChannelId;
-                channelDto.UploadPlaylistId = details.UploadPlaylistId;
+                    channelDto.YoutubeChannelId = details.YoutubeChannelId;
+                    channelDto.UploadPlaylistId = details.UploadPlaylistId;
+                }
 
                 var channel = new YoutubeChannel()
                 {
