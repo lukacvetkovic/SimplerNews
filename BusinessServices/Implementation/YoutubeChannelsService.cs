@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using AutoMapper;
 using BusinessEntities.BusinessModels;
+using BusinessServices.Interface;
 using DataModel.SQLDatabase;
 using DataModel.UnitOfWork;
 
@@ -13,7 +14,7 @@ using DataModel.UnitOfWork;
 
 namespace BusinessServices.Implementation
 {
-    public class YoutubeChannelsService
+    public class YoutubeChannelsService : IYoutubeChannelsService
     {
 
         private readonly UnitOfWork _unitOfWork;

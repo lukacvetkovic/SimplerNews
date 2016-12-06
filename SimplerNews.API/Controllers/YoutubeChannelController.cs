@@ -7,6 +7,7 @@ using System.Web.Http;
 using BusinessEntities.BusinessModels;
 using BusinessServices;
 using BusinessServices.Implementation;
+using BusinessServices.Interface;
 using DataModel.GenericRepository;
 
 namespace SimplerNews.API.Controllers
@@ -14,7 +15,7 @@ namespace SimplerNews.API.Controllers
     public class YoutubeChannelController : ApiController
     {
 
-        private readonly YoutubeChannelsService _youtubeChannelService;
+        private readonly IYoutubeChannelsService _youtubeChannelService;
 
         public YoutubeChannelController()
         {

@@ -82,14 +82,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\JSONHelper.cs" />
+    <Compile Include="Interface\IVideosService.cs" />
+    <Compile Include="Interface\IYoutubeChannelsService.cs" />
     <Compile Include="Implementation\VideosService.cs" />
     <Compile Include="Implementation\YoutubeChannelsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesFactory.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interface\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\BusinessEntities\BusinessEntities.csproj">
       <Project>{b4fa454e-e75b-4a9d-9cdc-0d67bb836123}</Project>

@@ -7,6 +7,7 @@ using System.Web.Http;
 using BusinessEntities.BusinessModels;
 using BusinessServices;
 using BusinessServices.Implementation;
+using BusinessServices.Interface;
 using DataModel.GenericRepository;
 
 
@@ -15,7 +16,7 @@ namespace SimplerNews.API.Controllers
     public class VideosController : ApiController
     {
 
-        private readonly VideosService _videosService;
+        private readonly IVideosService _videosService;
 
         public VideosController()
         {

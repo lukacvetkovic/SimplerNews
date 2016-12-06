@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using BusinessEntities.BusinessModels;
 using System.Web.Script.Serialization;
 using AutoMapper;
+using BusinessServices.Interface;
 using DataModel.SQLDatabase;
 using DataModel.UnitOfWork;
 
 namespace BusinessServices.Implementation
 {
-    public class VideosService
+    public class VideosService : IVideosService
     {
 
         private readonly UnitOfWork _unitOfWork;
