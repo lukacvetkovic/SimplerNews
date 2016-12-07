@@ -115,7 +115,7 @@ namespace BusinessServices.Implementation
                         channel.Name = channelDto.Name;
                         channel.Description = channelDto.Description;
                         channel.UploadPlaylistId = channelDto.UploadPlaylistId;
-                        channel.YoutubeChannelId = channel.YoutubeChannelId;
+                        channel.YoutubeChannelId = channelDto.YoutubeChannelId;
                         _unitOfWork.YoutubeChannelRepository.Update(channel);
                         _unitOfWork.Save();
                         scope.Complete();

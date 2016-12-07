@@ -18,10 +18,11 @@ namespace BusinessServices.Tests
         [TestMethod]
         public void InsertGetUpdateDelete()
         {
-            YoutubeChannelDto dto = new YoutubeChannelDto() { Description = "Test channel", Id = 0, Name = "Test"+Guid.NewGuid(), UploadPlaylistId = "PlaylistId", YoutubeChannelId = "ChannelId" };
+            string testName = "Test" + Guid.NewGuid();
+            YoutubeChannelDto dto = new YoutubeChannelDto() { Description = "Test channel", Id = 0, Name = testName, UploadPlaylistId = "PlaylistId", YoutubeChannelId = "ChannelId" };
             int id = _youtubeChannelsService.InsertYoutubeChannel(dto);
 
-            var addedDto = _youtubeChannelsService.GetYoutubeChannel("Test");
+            var addedDto = _youtubeChannelsService.GetYoutubeChannel(testName);
 
             Assert.AreEqual(dto.YoutubeChannelId, addedDto.YoutubeChannelId);
             Assert.AreEqual(dto.UploadPlaylistId, addedDto.UploadPlaylistId);
@@ -34,7 +35,7 @@ namespace BusinessServices.Tests
 
             Assert.IsTrue(success);
 
-            addedDto = _youtubeChannelsService.GetYoutubeChannel("Test");
+            addedDto = _youtubeChannelsService.GetYoutubeChannel(testName);
             Assert.AreEqual("PlaylistId124", addedDto.UploadPlaylistId);
             Assert.AreEqual("ChannelId123", addedDto.YoutubeChannelId);
 
@@ -42,7 +43,7 @@ namespace BusinessServices.Tests
 
             Assert.IsTrue(success);
 
-            addedDto = _youtubeChannelsService.GetYoutubeChannel("Test");
+            addedDto = _youtubeChannelsService.GetYoutubeChannel(testName);
 
             Assert.IsNull(addedDto);
 
