@@ -285,6 +285,8 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <None Include="Properties\PublishProfiles\simplernewsapi - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\simplernewsapi - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\simplernewstest - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\simplernewstest - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
