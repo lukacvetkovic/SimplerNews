@@ -26,9 +26,9 @@ namespace SimplerNews.API.Controllers
         // GET: Videos
         [HttpGet]
         [Route("api/Videos")]
-        public IHttpActionResult Index()
+        public List<VideoDto> Index()
         {
-            return Ok(_videosService.Get());
+            return _videosService.Get();
         }
 
         // GET: Videos

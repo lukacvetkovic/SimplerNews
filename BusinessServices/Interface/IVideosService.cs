@@ -9,5 +9,7 @@ namespace BusinessServices.Interface
         bool GetNewVideos();
         List<VideoDto> GetVideos(List<string> ids, VideoDto lastVideo);
         VideoDto GetLatestVideoFrom(YoutubeChannelDto channel);
+
+        int AddVideo(VideoDto videoDto);
     }
 }

@@ -149,5 +149,9 @@ namespace BusinessServices.Implementation
 
         }
 
+        public int AddVideo(VideoDto videoDto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

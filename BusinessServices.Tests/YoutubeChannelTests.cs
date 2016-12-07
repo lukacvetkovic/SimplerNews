@@ -16,7 +16,7 @@ namespace BusinessServices.Tests
         }
 
         [TestMethod]
-        public void InsertGetUpdateDelete()
+        public void InsertGetUpdateDeleteChannel()
         {
             string testName = "Test" + Guid.NewGuid();
             YoutubeChannelDto dto = new YoutubeChannelDto() { Description = "Test channel", Id = 0, Name = testName, UploadPlaylistId = "PlaylistId", YoutubeChannelId = "ChannelId" };
