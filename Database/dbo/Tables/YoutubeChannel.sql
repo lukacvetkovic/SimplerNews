@@ -4,6 +4,9 @@
     [Description]      NVARCHAR (250) NOT NULL,
     [YoutubeChannelId] NVARCHAR (150) NULL,
     [UploadPlaylistId] NVARCHAR (150) NULL,
-    CONSTRAINT [PK_YoutubeChannel] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_YoutubeChannel] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [UQ_YoutubeChannelId] UNIQUE NONCLUSTERED ([Id] ASC, [YoutubeChannelId] ASC)
 );
+
+
 

@@ -24,10 +24,10 @@ namespace BusinessServices.Implementation
             _unitOfWork = new UnitOfWork();
         }
 
+
         public List<YoutubeChannelDto> GetYoutubeChannels()
         {
-            var channels = _unitOfWork.YoutubeChannelRepository.GetAll();
-
+            var channels = _unitOfWork.YoutubeChannelRepository.GetAll().ToList();
             if (channels.Any())
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<YoutubeChannel, YoutubeChannelDto>());
@@ -39,84 +39,51 @@ namespace BusinessServices.Implementation
             return null;
         }
 
-        public YoutubeChannelDto GetYoutubeChannel(string name)
-        {
-            var channel = _unitOfWork.YoutubeChannelRepository.GetFirst(p => p.Name == name);
-
-            if (channel != null)
-            {
-                Mapper.Initialize(cfg => cfg.CreateMap<YoutubeChannel, YoutubeChannelDto>());
-
-                YoutubeChannelDto dto = Mapper.Map<YoutubeChannelDto>(channel);
-
-                return dto;
-            }
-
-            return null;
-        }
-
-        public int InsertYoutubeChannel(YoutubeChannelDto channelDto)
+        public int InsertOrUpdateYoutubeChannel(YoutubeChannelDto channelDto)
         {
             using (var scope = new TransactionScope())
             {
-                if (channelDto.UploadPlaylistId == null && channelDto.YoutubeChannelId == null)
-                {
-                    var details = GetChannelDetails(channelDto.Name);
 
-                    channelDto.YoutubeChannelId = details.YoutubeChannelId;
-                    channelDto.UploadPlaylistId = details.UploadPlaylistId;
+                var channel = _unitOfWork.YoutubeChannelRepository.GetSingle(p=>p.YoutubeChannelId==channelDto.YoutubeChannelId);
+                if (channel != null)
+                {
+                    channel.Description = channelDto.Description;
+                    channel.Name = channelDto.Name;
+                    channel.UploadPlaylistId = channelDto.UploadPlaylistId;
+                    _unitOfWork.YoutubeChannelRepository.Update(channel);
+
                 }
-
-                var channel = new YoutubeChannel()
+                else
                 {
-                    YoutubeChannelId = channelDto.YoutubeChannelId,
-                    Description = channelDto.Description,
-                    Name = channelDto.Name,
-                    Id = channelDto.Id,
-                    UploadPlaylistId = channelDto.UploadPlaylistId
-                };
+                    var newchannel = new YoutubeChannel()
+                    {
+                        Description = channelDto.Description,
+                        Name = channelDto.Name,
+                        UploadPlaylistId = channelDto.UploadPlaylistId,
+                        YoutubeChannelId = channelDto.YoutubeChannelId
+                    };
+                    _unitOfWork.YoutubeChannelRepository.Insert(newchannel);
+                    channel = newchannel;
 
-                _unitOfWork.YoutubeChannelRepository.Insert(channel);
+                }
                 _unitOfWork.Save();
-
                 scope.Complete();
-
                 return channel.Id;
             }
         }
 
-        public YoutubeChannelDetails GetChannelDetails(string channelName)
-        {
-            var requestURL = "https://www.googleapis.com/youtube/v3/channels?" +
-                   "part=contentDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw" +
-                   "&forUsername=" + channelName;
-
-            var request = WebRequest.Create(requestURL);
-            var responseStream = request.GetResponse().GetResponseStream();
-
-            using (StreamReader reader = new StreamReader(responseStream))
-            {
-                var jsonString = reader.ReadToEnd();
-
-                return YoutubeChannelDetails.FromJson(jsonString);
-            }
-        }
-
-        public bool EdditYoutubeChannel(int id, YoutubeChannelDto channelDto)
+        public bool DeleteYoutubeChannel(int youtubeChannelId)
         {
             var success = false;
-            if (channelDto != null)
+            if (youtubeChannelId > 0)
             {
                 using (var scope = new TransactionScope())
                 {
-                    var channel = _unitOfWork.YoutubeChannelRepository.GetByID(id);
-                    if (channel != null)
+                    var youtubeChannel = _unitOfWork.YoutubeChannelRepository.GetByID(youtubeChannelId);
+                    if (youtubeChannel != null)
                     {
-                        channel.Name = channelDto.Name;
-                        channel.Description = channelDto.Description;
-                        channel.UploadPlaylistId = channelDto.UploadPlaylistId;
-                        channel.YoutubeChannelId = channelDto.YoutubeChannelId;
-                        _unitOfWork.YoutubeChannelRepository.Update(channel);
+
+                        _unitOfWork.YoutubeChannelRepository.Delete(youtubeChannel);
                         _unitOfWork.Save();
                         scope.Complete();
                         success = true;
@@ -125,27 +92,5 @@ namespace BusinessServices.Implementation
             }
             return success;
         }
-
-        public bool DeleteYoutubeChannel(int channelId)
-        {
-            var success = false;
-            if (channelId > 0)
-            {
-                using (var scope = new TransactionScope())
-                {
-                    var quote = _unitOfWork.YoutubeChannelRepository.GetByID(channelId);
-                    if (quote != null)
-                    {
-
-                        _unitOfWork.YoutubeChannelRepository.Delete(quote);
-                        _unitOfWork.Save();
-                        scope.Complete();
-                        success = true;
-                    }
-                }
-            }
-            return success;
-        }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BusinessEntities.BusinessModels;
 using BusinessServices.Interface;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,32 +19,28 @@ namespace BusinessServices.Tests
         [TestMethod]
         public void InsertGetUpdateDeleteChannel()
         {
-            string testName = "Test" + Guid.NewGuid();
+            string testName = "Test";
             YoutubeChannelDto dto = new YoutubeChannelDto() { Description = "Test channel", Id = 0, Name = testName, UploadPlaylistId = "PlaylistId", YoutubeChannelId = "ChannelId" };
-            int id = _youtubeChannelsService.InsertYoutubeChannel(dto);
+            int id = _youtubeChannelsService.InsertOrUpdateYoutubeChannel(dto);
 
-            var addedDto = _youtubeChannelsService.GetYoutubeChannel(testName);
+            var addedDto = _youtubeChannelsService.GetYoutubeChannels().SingleOrDefault(p => p.YoutubeChannelId == dto.YoutubeChannelId);
 
             Assert.AreEqual(dto.YoutubeChannelId, addedDto.YoutubeChannelId);
             Assert.AreEqual(dto.UploadPlaylistId, addedDto.UploadPlaylistId);
             Assert.AreEqual(dto.Description, addedDto.Description);
 
             addedDto.UploadPlaylistId = "PlaylistId124";
-            addedDto.YoutubeChannelId = "ChannelId123";
 
-            var success = _youtubeChannelsService.EdditYoutubeChannel(addedDto.Id, addedDto);
+            _youtubeChannelsService.InsertOrUpdateYoutubeChannel(addedDto);
 
-            Assert.IsTrue(success);
-
-            addedDto = _youtubeChannelsService.GetYoutubeChannel(testName);
+            addedDto = _youtubeChannelsService.GetYoutubeChannels().SingleOrDefault(p => p.YoutubeChannelId == dto.YoutubeChannelId);
             Assert.AreEqual("PlaylistId124", addedDto.UploadPlaylistId);
-            Assert.AreEqual("ChannelId123", addedDto.YoutubeChannelId);
 
-            success = _youtubeChannelsService.DeleteYoutubeChannel(addedDto.Id);
+            var success = _youtubeChannelsService.DeleteYoutubeChannel(addedDto.Id);
 
             Assert.IsTrue(success);
 
-            addedDto = _youtubeChannelsService.GetYoutubeChannel(testName);
+            addedDto = _youtubeChannelsService.GetYoutubeChannels().SingleOrDefault(p => p.YoutubeChannelId == dto.YoutubeChannelId);
 
             Assert.IsNull(addedDto);
 

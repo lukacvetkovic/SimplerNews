@@ -25,31 +25,18 @@ namespace SimplerNews.API.Controllers
         // GET: YoutubeChannel
         [HttpGet]
         [Route("api/YoutubeChannel")]
-        public IHttpActionResult Index()
+        public List<YoutubeChannelDto> GetYoutubeChannels()
         {
-            return Ok(_youtubeChannelService.GetYoutubeChannels());
+            return _youtubeChannelService.GetYoutubeChannels();
         }
 
-        // GET: YoutubeChannel/Details/5
-        [HttpGet]
-        [Route("api/YoutubeChannel")]
-        public IHttpActionResult Details(string name)
-        {
-            var channel = _youtubeChannelService.GetYoutubeChannel(name);
-
-            if (channel != null)
-            {
-                return Ok(channel);
-            }
-            return BadRequest();
-        }
 
         // GET: YoutubeChannel/Create
         [HttpPost]
-        [Route("api/YoutubeChannel")]
-        public IHttpActionResult Create(YoutubeChannelDto channel)
+        [Route("api/YoutubeChannel/InsertOrUpdate")]
+        public IHttpActionResult InsertOrUpdate(YoutubeChannelDto channel)
         {
-            var result = _youtubeChannelService.InsertYoutubeChannel(channel);
+            var result = _youtubeChannelService.InsertOrUpdateYoutubeChannel(channel);
 
             if (result != 0)
             {
@@ -58,19 +45,28 @@ namespace SimplerNews.API.Controllers
             return BadRequest();
         }
 
-        // GET: YoutubeChannel/Edit/5
-        [HttpPut]
-        [Route("api/YoutubeChannel/{id}")]
-        public IHttpActionResult Edit(int id, YoutubeChannelDto channel)
-        {
-            var result = _youtubeChannelService.EdditYoutubeChannel(id, channel);
 
-            if (result)
+        // GET: YoutubeChannel/Create
+        [HttpPost]
+        [Route("api/YoutubeChannel/InsertOrUpdateBulk")]
+        public IHttpActionResult InsertOrUpdateBulk(List<YoutubeChannelDto> channels)
+        {
+            try
             {
-                return Ok();
+                foreach (var channel in channels)
+                {
+                    _youtubeChannelService.InsertOrUpdateYoutubeChannel(channel);
+                }
+
+                return Ok(true);
             }
-            return BadRequest();
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
         }
+
 
         // GET: YoutubeChannel/Delete/5
         [HttpDelete]

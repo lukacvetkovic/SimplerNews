@@ -126,6 +126,12 @@
     <Compile Include="SQLDatabase\Video.cs">
       <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="SQLDatabase\VideoCategory.cs">
+      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SQLDatabase\VideoTag.cs">
+      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="SQLDatabase\YoutubeChannel.cs">
       <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
     </Compile>

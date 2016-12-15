@@ -12,26 +12,19 @@ namespace DataModel.SQLDatabase
     using System;
     using System.Collections.Generic;
     
-    public partial class Video
+    public partial class VideoCategory
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Video()
+        public VideoCategory()
         {
-            this.VideoTag = new HashSet<VideoTag>();
+            this.Video = new HashSet<Video>();
         }
     
         public int Id { get; set; }
-        public string YoutubeId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public int YoutubeChannelId { get; set; }
-        public System.DateTime PublishedAt { get; set; }
-        public string YoutubeLink { get; set; }
-        public Nullable<int> VideoCategoryId { get; set; }
+        public string VideoCategoryName { get; set; }
+        public string YoutbeVideoCategoryId { get; set; }
     
-        public virtual VideoCategory VideoCategory { get; set; }
-        public virtual YoutubeChannel YoutubeChannel { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<VideoTag> VideoTag { get; set; }
+        public virtual ICollection<Video> Video { get; set; }
     }
 }

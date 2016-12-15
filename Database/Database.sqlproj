@@ -74,5 +74,7 @@
     <Build Include="dbo\Tables\AspNetUserClaims.sql" />
     <Build Include="dbo\Tables\AspNetRoles.sql" />
     <Build Include="dbo\Tables\__MigrationHistory.sql" />
+    <Build Include="dbo\Tables\VideoTag.sql" />
+    <Build Include="dbo\Tables\VideoCategory.sql" />
   </ItemGroup>
 </Project>

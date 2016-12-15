@@ -32,6 +32,8 @@ namespace DataModel.SQLDatabase
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<UserInformation> UserInformation { get; set; }
         public virtual DbSet<Video> Video { get; set; }
+        public virtual DbSet<VideoCategory> VideoCategory { get; set; }
+        public virtual DbSet<VideoTag> VideoTag { get; set; }
         public virtual DbSet<YoutubeChannel> YoutubeChannel { get; set; }
     }
 }

@@ -84,9 +84,26 @@
           <Property Name="YoutubeId" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="250" />
-          <Property Name="YoutubeChannelId" Type="nvarchar" MaxLength="150" />
-          <Property Name="YoutubeChannelTitle" Type="nvarchar" MaxLength="50" />
+          <Property Name="YoutubeChannelId" Type="int" Nullable="false" />
           <Property Name="PublishedAt" Type="datetime" Nullable="false" />
+          <Property Name="YoutubeLink" Type="nvarchar" MaxLength="250" />
+          <Property Name="VideoCategoryId" Type="int" />
+        </EntityType>
+        <EntityType Name="VideoCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VideoCategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="YoutbeVideoCategoryId" Type="nvarchar" MaxLength="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VideoTag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VideoId" Type="int" Nullable="false" />
+          <Property Name="Tag" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="YoutubeChannel">
           <Key>
@@ -166,6 +183,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Video_VideoCategory">
+          <End Role="VideoCategory" Type="Self.VideoCategory" Multiplicity="0..1" />
+          <End Role="Video" Type="Self.Video" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VideoCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Video">
+              <PropertyRef Name="VideoCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Video_YoutubeChannel">
+          <End Role="YoutubeChannel" Type="Self.YoutubeChannel" Multiplicity="1" />
+          <End Role="Video" Type="Self.Video" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="YoutubeChannel">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Video">
+              <PropertyRef Name="YoutubeChannelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VideoTags_Video">
+          <End Role="Video" Type="Self.Video" Multiplicity="1" />
+          <End Role="VideoTag" Type="Self.VideoTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Video">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VideoTag">
+              <PropertyRef Name="VideoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="SimplerNewsDbModelStoreContainer">
           <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -175,6 +228,8 @@
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInformation" EntityType="Self.UserInformation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Video" EntityType="Self.Video" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VideoCategory" EntityType="Self.VideoCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VideoTag" EntityType="Self.VideoTag" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="YoutubeChannel" EntityType="Self.YoutubeChannel" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -196,6 +251,18 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="UserInformation" EntitySet="UserInformation" />
           </AssociationSet>
+          <AssociationSet Name="FK_Video_VideoCategory" Association="Self.FK_Video_VideoCategory">
+            <End Role="VideoCategory" EntitySet="VideoCategory" />
+            <End Role="Video" EntitySet="Video" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Video_YoutubeChannel" Association="Self.FK_Video_YoutubeChannel">
+            <End Role="YoutubeChannel" EntitySet="YoutubeChannel" />
+            <End Role="Video" EntitySet="Video" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VideoTags_Video" Association="Self.FK_VideoTags_Video">
+            <End Role="Video" EntitySet="Video" />
+            <End Role="VideoTag" EntitySet="VideoTag" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -209,6 +276,8 @@
           <EntitySet Name="AspNetUsers" EntityType="SimplerNewsDbModel.AspNetUsers" />
           <EntitySet Name="UserInformation" EntityType="SimplerNewsDbModel.UserInformation" />
           <EntitySet Name="Video" EntityType="SimplerNewsDbModel.Video" />
+          <EntitySet Name="VideoCategory" EntityType="SimplerNewsDbModel.VideoCategory" />
+          <EntitySet Name="VideoTag" EntityType="SimplerNewsDbModel.VideoTag" />
           <EntitySet Name="YoutubeChannel" EntityType="SimplerNewsDbModel.YoutubeChannel" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="SimplerNewsDbModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -221,6 +290,18 @@
           <AssociationSet Name="FK_UserInformation_AspNetUsers" Association="SimplerNewsDbModel.FK_UserInformation_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="UserInformation" EntitySet="UserInformation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Video_VideoCategory" Association="SimplerNewsDbModel.FK_Video_VideoCategory">
+            <End Role="VideoCategory" EntitySet="VideoCategory" />
+            <End Role="Video" EntitySet="Video" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Video_YoutubeChannel" Association="SimplerNewsDbModel.FK_Video_YoutubeChannel">
+            <End Role="YoutubeChannel" EntitySet="YoutubeChannel" />
+            <End Role="Video" EntitySet="Video" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VideoTags_Video" Association="SimplerNewsDbModel.FK_VideoTags_Video">
+            <End Role="Video" EntitySet="Video" />
+            <End Role="VideoTag" EntitySet="VideoTag" />
           </AssociationSet>
           <AssociationSet Name="AspNetUserRoles" Association="SimplerNewsDbModel.AspNetUserRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
@@ -306,9 +387,31 @@
           <Property Name="YoutubeId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="YoutubeChannelId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="YoutubeChannelTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="YoutubeChannelId" Type="Int32" Nullable="false" />
           <Property Name="PublishedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="YoutubeLink" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="VideoCategoryId" Type="Int32" />
+          <NavigationProperty Name="VideoCategory" Relationship="SimplerNewsDbModel.FK_Video_VideoCategory" FromRole="Video" ToRole="VideoCategory" />
+          <NavigationProperty Name="YoutubeChannel" Relationship="SimplerNewsDbModel.FK_Video_YoutubeChannel" FromRole="Video" ToRole="YoutubeChannel" />
+          <NavigationProperty Name="VideoTag" Relationship="SimplerNewsDbModel.FK_VideoTags_Video" FromRole="Video" ToRole="VideoTag" />
+        </EntityType>
+        <EntityType Name="VideoCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VideoCategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="YoutbeVideoCategoryId" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_Video_VideoCategory" FromRole="VideoCategory" ToRole="Video" />
+        </EntityType>
+        <EntityType Name="VideoTag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VideoId" Type="Int32" Nullable="false" />
+          <Property Name="Tag" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_VideoTags_Video" FromRole="VideoTag" ToRole="Video" />
         </EntityType>
         <EntityType Name="YoutubeChannel">
           <Key>
@@ -319,6 +422,7 @@
           <Property Name="Description" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="YoutubeChannelId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="UploadPlaylistId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_Video_YoutubeChannel" FromRole="YoutubeChannel" ToRole="Video" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="SimplerNewsDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
@@ -357,6 +461,42 @@
             </Principal>
             <Dependent Role="UserInformation">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Video_VideoCategory">
+          <End Type="SimplerNewsDbModel.VideoCategory" Role="VideoCategory" Multiplicity="0..1" />
+          <End Type="SimplerNewsDbModel.Video" Role="Video" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VideoCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Video">
+              <PropertyRef Name="VideoCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Video_YoutubeChannel">
+          <End Type="SimplerNewsDbModel.YoutubeChannel" Role="YoutubeChannel" Multiplicity="1" />
+          <End Type="SimplerNewsDbModel.Video" Role="Video" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="YoutubeChannel">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Video">
+              <PropertyRef Name="YoutubeChannelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VideoTags_Video">
+          <End Type="SimplerNewsDbModel.Video" Role="Video" Multiplicity="1" />
+          <End Type="SimplerNewsDbModel.VideoTag" Role="VideoTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Video">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VideoTag">
+              <PropertyRef Name="VideoId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -439,12 +579,31 @@
           <EntitySetMapping Name="Video">
             <EntityTypeMapping TypeName="SimplerNewsDbModel.Video">
               <MappingFragment StoreEntitySet="Video">
+                <ScalarProperty Name="VideoCategoryId" ColumnName="VideoCategoryId" />
+                <ScalarProperty Name="YoutubeLink" ColumnName="YoutubeLink" />
                 <ScalarProperty Name="PublishedAt" ColumnName="PublishedAt" />
-                <ScalarProperty Name="YoutubeChannelTitle" ColumnName="YoutubeChannelTitle" />
                 <ScalarProperty Name="YoutubeChannelId" ColumnName="YoutubeChannelId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="YoutubeId" ColumnName="YoutubeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VideoCategory">
+            <EntityTypeMapping TypeName="SimplerNewsDbModel.VideoCategory">
+              <MappingFragment StoreEntitySet="VideoCategory">
+                <ScalarProperty Name="YoutbeVideoCategoryId" ColumnName="YoutbeVideoCategoryId" />
+                <ScalarProperty Name="VideoCategoryName" ColumnName="VideoCategoryName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VideoTag">
+            <EntityTypeMapping TypeName="SimplerNewsDbModel.VideoTag">
+              <MappingFragment StoreEntitySet="VideoTag">
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+                <ScalarProperty Name="VideoId" ColumnName="VideoId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

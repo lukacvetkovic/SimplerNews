@@ -4,9 +4,11 @@ using System.Linq;
 using System.Net;
 using System.IO;
 using System.Threading.Tasks;
+using System.Transactions;
 using BusinessEntities.BusinessModels;
 using System.Web.Script.Serialization;
 using AutoMapper;
+using BusinessEntities.APIModels;
 using BusinessServices.Interface;
 using DataModel.SQLDatabase;
 using DataModel.UnitOfWork;
@@ -23,135 +25,171 @@ namespace BusinessServices.Implementation
             _unitOfWork = new UnitOfWork();
         }
 
-        public List<VideoDto> Get()
+
+        public List<VideoDto> GetNewVideos(int? youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos)
         {
-            var videos = _unitOfWork.VideoRepository.GetAll().ToList();
+            List<VideoDto> videoList = new List<VideoDto>();
 
-            if (videos.Any())
+            var videosFromDb = _unitOfWork.VideoRepository.GetAll().OrderByDescending(p => p.PublishedAt).Take(numberOfVideos).ToList();
+            if (videosFromDb.Any())
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Video, VideoDto>());
-
-                List<VideoDto> dtoList = Mapper.Map<List<VideoDto>>(videos);
-
-                return dtoList;
-
-            }
-
-            return null;
-        }
-        public bool GetNewVideos()
-        {
-            var channels = _unitOfWork.YoutubeChannelRepository.GetAll().ToList();
-
-            Mapper.Initialize(cfg => cfg.CreateMap<YoutubeChannel, YoutubeChannelDto>());
-
-            List<YoutubeChannelDto> channelsDtos = Mapper.Map<List<YoutubeChannelDto>>(channels);
-
-            foreach (YoutubeChannelDto channel in channelsDtos)
-            {
-
-
-                var requestURL = "https://www.googleapis.com/youtube/v3/playlistItems?" +
-                  "part=id,contentDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw&maxResults=50" +
-                  "&playlistId=" + channel.UploadPlaylistId;
-
-                var request = WebRequest.Create(requestURL);
-                var responseStream = request.GetResponse().GetResponseStream();
-
-                if (responseStream != null)
-                    using (StreamReader reader = new StreamReader(responseStream))
-                    {
-                        var jsonString = reader.ReadToEnd();
-
-                        var serializer = new JavaScriptSerializer();
-
-                        var data = serializer.Deserialize<Dictionary<string, Object>>(jsonString);
-
-                        var videoData = ((System.Collections.ArrayList)data["items"]);
-                        var videoIds = new List<string>();
-
-                        foreach (Dictionary<string, object> video in videoData)
-                        {
-                            videoIds.Add((string)((Dictionary<string, object>)video["contentDetails"])["videoId"]);
-                        }
-
-                        var videos = GetVideos(videoIds, GetLatestVideoFrom(channel));
-
-                        foreach (var videoDto in videos)
-                        {
-                            _unitOfWork.VideoRepository.Insert(new Video() { Description = videoDto.Description, PublishedAt = videoDto.PublishedAt, Title = videoDto.Title, YoutubeChannelId = videoDto.YoutubeChannelId, YoutubeChannelTitle = videoDto.YoutubeChannelTitle, YoutubeId = videoDto.YoutubeId });
-                        }
-                        _unitOfWork.Save();
-
-                    }
-            }
-
-
-            return true;
-        }
-
-        public List<VideoDto> GetVideos(List<string> ids, VideoDto lastVideo)
-        {
-            var requestURL = "https://www.googleapis.com/youtube/v3/videos" +
-                "?part=id,recordingDetails,snippet,statistics,topicDetails&key=AIzaSyBSsdJSTQ3uvLOH1MgN6joX_cxfs4Tmflw" +
-                "&id=" + string.Join(",", ids);
-
-            var request = WebRequest.Create(requestURL);
-            var responseStream = request.GetResponse().GetResponseStream();
-
-            using (StreamReader reader = new StreamReader(responseStream))
-            {
-                var jsonString = reader.ReadToEnd();
-
-                var serializer = new JavaScriptSerializer();
-
-                var data = serializer.Deserialize<Dictionary<string, object>>(jsonString);
-
-                var videoData = (System.Collections.ArrayList)data["items"];
-
-                var videos = new List<VideoDto>();
-
-                foreach (Dictionary<string, object> video in videoData)
+                foreach (var video in videosFromDb)
                 {
-                    var videoObject = VideoDto.FromJson(video);
+                    VideoDto videoDto = new VideoDto()
+                    {
+                        YoutubeChannelId = video.YoutubeChannelId,
+                        Description = video.Description,
+                        VideoCategory = new VideoCategoryDto() { Id = video.VideoCategory.Id, YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId, VideoCategoryName = video.VideoCategory.VideoCategoryName },
+                        Id = video.Id,
+                        PublishedAt = video.PublishedAt,
+                        YoutubeId = video.YoutubeId,
+                        Title = video.Title,
+                        VideoTagList = video.VideoTag.ToList().Select(p => p.Tag).ToList(),
+                        YoutubeLink = video.YoutubeLink
+                    };
 
-                    if (lastVideo == null || lastVideo.PublishedAt < videoObject.PublishedAt)
+                    //TODO calculate likes, dislikes,...
+                    videoList.Add(videoDto);
+                }
+            }
+
+            return videoList;
+        }
+
+        public List<VideoDto> GetHotVideos(int numberOfVideos)
+        {
+            List<VideoDto> videoList = new List<VideoDto>();
+
+            var videosFromDb = _unitOfWork.VideoRepository.GetMany(p => p.PublishedAt > DateTime.Now.AddDays(-2)).ToList();
+            if (videosFromDb.Any())
+            {
+                foreach (var video in videosFromDb)
+                {
+                    VideoDto videoDto = new VideoDto()
                     {
-                        videos.Add(videoObject);
-                    }
-                    else
+                        YoutubeChannelId = video.YoutubeChannelId,
+                        Description = video.Description,
+                        VideoCategory = new VideoCategoryDto() { Id = video.VideoCategory.Id, YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId, VideoCategoryName = video.VideoCategory.VideoCategoryName },
+                        Id = video.Id,
+                        PublishedAt = video.PublishedAt,
+                        YoutubeId = video.YoutubeId,
+                        Title = video.Title,
+                        VideoTagList = video.VideoTag.ToList().Select(p => p.Tag).ToList(),
+                        YoutubeLink = video.YoutubeLink
+                    };
+
+                    //TODO calculate likes, dislikes,... and take numberofvideos
+
+                    videoList.Add(videoDto);
+                }
+            }
+
+            return videoList.OrderByDescending(p => p.NumberOfViews).ToList();
+        }
+
+        public List<VideoDto> GetPersonalizedVideos(string aspNetUserId, int numberOfVideos)
+        {
+
+            //TODO treba pamet stavit
+            List<VideoDto> videoList = new List<VideoDto>();
+
+            var videosFromDb = _unitOfWork.VideoRepository.GetAll().OrderByDescending(p => p.PublishedAt).Take(numberOfVideos).ToList();
+            if (videosFromDb.Any())
+            {
+                foreach (var video in videosFromDb)
+                {
+                    VideoDto videoDto = new VideoDto()
                     {
-                        break;
+                        YoutubeChannelId = video.YoutubeChannelId,
+                        Description = video.Description,
+                        VideoCategory = new VideoCategoryDto() { Id = video.VideoCategory.Id, YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId, VideoCategoryName = video.VideoCategory.VideoCategoryName },
+                        Id = video.Id,
+                        PublishedAt = video.PublishedAt,
+                        YoutubeId = video.YoutubeId,
+                        Title = video.Title,
+                        VideoTagList = video.VideoTag.ToList().Select(p => p.Tag).ToList(),
+                        YoutubeLink = video.YoutubeLink
+                    };
+
+                    //TODO calculate likes, dislikes,...
+                    videoList.Add(videoDto);
+                }
+            }
+
+            return videoList;
+        }
+
+        public List<VideoDto> GetVidesByCategory(int categoryId, int numberOfVideos)
+        {
+            List<VideoDto> videoList = new List<VideoDto>();
+
+            var videosFromDb = _unitOfWork.VideoRepository.GetMany(p => p.VideoCategoryId == categoryId).OrderByDescending(p => p.PublishedAt).Take(numberOfVideos).ToList();
+            if (videosFromDb.Any())
+            {
+                foreach (var video in videosFromDb)
+                {
+                    VideoDto videoDto = new VideoDto()
+                    {
+                        YoutubeChannelId = video.YoutubeChannelId,
+                        Description = video.Description,
+                        VideoCategory = new VideoCategoryDto() { Id = video.VideoCategory.Id, YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId, VideoCategoryName = video.VideoCategory.VideoCategoryName },
+                        Id = video.Id,
+                        PublishedAt = video.PublishedAt,
+                        YoutubeId = video.YoutubeId,
+                        Title = video.Title,
+                        VideoTagList = video.VideoTag.ToList().Select(p => p.Tag).ToList(),
+                        YoutubeLink = video.YoutubeLink
+                    };
+
+                    //TODO calculate likes, dislikes,...
+                    videoList.Add(videoDto);
+                }
+            }
+
+            return videoList;
+        }
+
+        public int AddVideo(VideoAPIModel videoDto)
+        {
+            using (var scope = new TransactionScope())
+            {
+                var video = new Video();
+
+                video.YoutubeChannelId = _unitOfWork.YoutubeChannelRepository.GetSingle(p => p.YoutubeChannelId == videoDto.YoutubeChannelId).Id;
+                video.Description = videoDto.Description;
+                video.PublishedAt = videoDto.PublishedAt;
+                video.Title = videoDto.Title;
+                video.VideoCategoryId = _unitOfWork.VideoCategoryRepository.GetSingle(p => p.YoutbeVideoCategoryId == videoDto.VideoCategoryId).Id;
+                video.VideoTag = videoDto.VideoTagList.Select(p => new VideoTag() { Tag = p }).ToList();
+                video.YoutubeId = videoDto.YoutubeId;
+                video.YoutubeLink = videoDto.YoutubeLink;
+                ;
+                _unitOfWork.VideoRepository.Insert(video);
+                _unitOfWork.Save();
+                scope.Complete();
+                return video.Id;
+            }
+        }
+
+        public bool RemoveVideo(int videoId)
+        {
+            var success = false;
+            if (videoId > 0)
+            {
+                using (var scope = new TransactionScope())
+                {
+                    var video = _unitOfWork.VideoRepository.GetByID(videoId);
+                    if (video != null)
+                    {
+
+                        _unitOfWork.VideoRepository.Delete(video);
+                        _unitOfWork.Save();
+                        scope.Complete();
+                        success = true;
                     }
                 }
-
-                return videos;
             }
-        }
-
-        public VideoDto GetLatestVideoFrom(YoutubeChannelDto channel)
-        {
-
-            var video =
-                _unitOfWork.VideoRepository.GetMany(p => p.YoutubeChannelId == channel.YoutubeChannelId)
-                    .OrderByDescending(q => q.Id)
-                    .FirstOrDefault();
-            if (video != null)
-            {
-                Mapper.Initialize(cfg => cfg.CreateMap<Video, VideoDto>());
-
-                VideoDto dto = Mapper.Map<VideoDto>(video);
-
-                return dto;
-            }
-
-            return null;
-
-        }
-
-        public int AddVideo(VideoDto videoDto)
-        {
-            throw new NotImplementedException();
+            return success;
         }
     }
 }

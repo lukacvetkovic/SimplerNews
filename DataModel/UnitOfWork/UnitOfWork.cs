@@ -20,6 +20,7 @@ namespace DataModel.UnitOfWork
         private SimplerNewsSQLDb _context = null;
         private IGenericRepository<UserInformation> _userInformationRepository;
         private IGenericRepository<YoutubeChannel> _youtubeChannelRepository;
+        private IGenericRepository<VideoCategory> _videoCategoryRepository;
         private IGenericRepository<Video> _videoRepository;
         #endregion
 
@@ -60,6 +61,16 @@ namespace DataModel.UnitOfWork
                 if (this._videoRepository == null)
                     this._videoRepository = new GenericRepositorySQL<Video>(_context);
                 return _videoRepository;
+            }
+        }
+
+        public IGenericRepository<VideoCategory> VideoCategoryRepository
+        {
+            get
+            {
+                if (this._videoCategoryRepository == null)
+                    this._videoCategoryRepository = new GenericRepositorySQL<VideoCategory>(_context);
+                return _videoCategoryRepository;
             }
         }
         #endregion

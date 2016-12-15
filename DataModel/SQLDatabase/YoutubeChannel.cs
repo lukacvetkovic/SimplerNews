@@ -14,10 +14,19 @@ namespace DataModel.SQLDatabase
     
     public partial class YoutubeChannel
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public YoutubeChannel()
+        {
+            this.Video = new HashSet<Video>();
+        }
+    
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string YoutubeChannelId { get; set; }
         public string UploadPlaylistId { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Video> Video { get; set; }
     }
 }
