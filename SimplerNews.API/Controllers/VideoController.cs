@@ -27,10 +27,10 @@ namespace SimplerNews.API.Controllers
 
 
         [HttpGet]
-        [Route("api/Video/Videos")]
-        public List<VideoDto> Videos(int? youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos)
+        [Route("api/Video/VideosForChanneč")]
+        public List<VideoDto> Videos(int youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos)
         {
-            return _videosService.GetNewVideos(youtubeChannelId, from, to, search, numberOfVideos);
+            return _videosService.GetVideosForChannel(youtubeChannelId, from, to, search, numberOfVideos);
         }
 
 

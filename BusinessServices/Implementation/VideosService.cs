@@ -26,11 +26,23 @@ namespace BusinessServices.Implementation
         }
 
 
-        public List<VideoDto> GetNewVideos(int? youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos)
+        public List<VideoDto> GetVideosForChannel(int youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos)
         {
             List<VideoDto> videoList = new List<VideoDto>();
 
-            var videosFromDb = _unitOfWork.VideoRepository.GetAll().OrderByDescending(p => p.PublishedAt).Take(numberOfVideos).ToList();
+            if (youtubeChannelId <= 0)
+            {
+                return videoList;
+            }
+
+            var videosFromDb =
+                    _unitOfWork.VideoRepository.GetAll()
+                        .Where(v => v.YoutubeChannelId == youtubeChannelId && v.PublishedAt >= from && v.PublishedAt <= to)
+                        .Where(q => q.Description.Contains(search) || q.Title.Contains(search) || q.VideoTag.Count(x => x.Tag.Contains(search)) > 0)
+                        .OrderByDescending(p => p.PublishedAt)
+                        .Take(numberOfVideos)
+                        .ToList();
+
             if (videosFromDb.Any())
             {
                 foreach (var video in videosFromDb)
@@ -39,7 +51,13 @@ namespace BusinessServices.Implementation
                     {
                         YoutubeChannelId = video.YoutubeChannelId,
                         Description = video.Description,
-                        VideoCategory = new VideoCategoryDto() { Id = video.VideoCategory.Id, YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId, VideoCategoryName = video.VideoCategory.VideoCategoryName },
+                        VideoCategory =
+                            new VideoCategoryDto()
+                            {
+                                Id = video.VideoCategory.Id,
+                                YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId,
+                                VideoCategoryName = video.VideoCategory.VideoCategoryName
+                            },
                         Id = video.Id,
                         PublishedAt = video.PublishedAt,
                         YoutubeId = video.YoutubeId,
@@ -51,6 +69,7 @@ namespace BusinessServices.Implementation
                     //TODO calculate likes, dislikes,...
                     videoList.Add(videoDto);
                 }
+
             }
 
             return videoList;
@@ -153,16 +172,22 @@ namespace BusinessServices.Implementation
         {
             using (var scope = new TransactionScope())
             {
-                var video = new Video();
+                var video = new Video
+                {
+                    YoutubeChannelId =
+                        _unitOfWork.YoutubeChannelRepository.GetSingle(
+                            p => p.YoutubeChannelId == videoDto.YoutubeChannelId).Id,
+                    Description = videoDto.Description,
+                    PublishedAt = videoDto.PublishedAt,
+                    Title = videoDto.Title,
+                    VideoCategoryId =
+                        _unitOfWork.VideoCategoryRepository.GetSingle(
+                            p => p.YoutbeVideoCategoryId == videoDto.VideoCategoryId).Id,
+                    VideoTag = videoDto.VideoTagList.Select(p => new VideoTag() { Tag = p }).ToList(),
+                    YoutubeId = videoDto.YoutubeId,
+                    YoutubeLink = videoDto.YoutubeLink
+                };
 
-                video.YoutubeChannelId = _unitOfWork.YoutubeChannelRepository.GetSingle(p => p.YoutubeChannelId == videoDto.YoutubeChannelId).Id;
-                video.Description = videoDto.Description;
-                video.PublishedAt = videoDto.PublishedAt;
-                video.Title = videoDto.Title;
-                video.VideoCategoryId = _unitOfWork.VideoCategoryRepository.GetSingle(p => p.YoutbeVideoCategoryId == videoDto.VideoCategoryId).Id;
-                video.VideoTag = videoDto.VideoTagList.Select(p => new VideoTag() { Tag = p }).ToList();
-                video.YoutubeId = videoDto.YoutubeId;
-                video.YoutubeLink = videoDto.YoutubeLink;
                 ;
                 _unitOfWork.VideoRepository.Insert(video);
                 _unitOfWork.Save();

@@ -285,7 +285,9 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <None Include="Properties\PublishProfiles\simplernewsapi - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\simplernewsapi - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\simplernewstest - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\simplernewstest - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\simplernewstest - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\simplernewstest - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -353,7 +355,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50719</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

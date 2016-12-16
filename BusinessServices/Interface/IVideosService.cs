@@ -7,7 +7,7 @@ namespace BusinessServices.Interface
 {
     public interface IVideosService
     {
-        List<VideoDto> GetNewVideos(int? youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos);
+        List<VideoDto> GetVideosForChannel(int youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos);
         List<VideoDto> GetHotVideos(int numberOfVideos);
         List<VideoDto> GetPersonalizedVideos(string aspNetUserId, int numberOfVideos);
         List<VideoDto> GetVidesByCategory(int categoryId, int numberOfVideos);
