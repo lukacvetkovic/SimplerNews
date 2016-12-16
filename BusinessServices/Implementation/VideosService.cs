@@ -191,5 +191,32 @@ namespace BusinessServices.Implementation
             }
             return success;
         }
+
+        public void AddBulkVideos(List<VideoAPIModel> videos)
+        {
+            using (var scope = new TransactionScope())
+            {
+                foreach (var videoDto in videos)
+                {
+
+                    var video = new Video();
+
+                    video.YoutubeChannelId = _unitOfWork.YoutubeChannelRepository.GetSingle(p => p.YoutubeChannelId == videoDto.YoutubeChannelId).Id;
+                    video.Description = videoDto.Description;
+                    video.PublishedAt = videoDto.PublishedAt;
+                    video.Title = videoDto.Title;
+                    video.VideoCategoryId = _unitOfWork.VideoCategoryRepository.GetSingle(p => p.YoutbeVideoCategoryId == videoDto.VideoCategoryId).Id;
+                    video.VideoTag = videoDto.VideoTagList.Select(p => new VideoTag() { Tag = p }).ToList();
+                    video.YoutubeId = videoDto.YoutubeId;
+                    video.YoutubeLink = videoDto.YoutubeLink;
+                    ;
+                    _unitOfWork.VideoRepository.Insert(video);
+
+                }
+
+                _unitOfWork.Save();
+                scope.Complete();
+            }
+        }
     }
 }

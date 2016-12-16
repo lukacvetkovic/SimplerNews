@@ -14,5 +14,6 @@ namespace BusinessServices.Interface
 
         int AddVideo(VideoAPIModel videoDto);
         bool RemoveVideo(int videoId);
+        void AddBulkVideos(List<VideoAPIModel> videos);
     }
 }

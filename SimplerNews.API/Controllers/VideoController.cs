@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using BusinessEntities.APIModels;
 using BusinessEntities.BusinessModels;
 using BusinessServices;
 using BusinessServices.Implementation;
@@ -29,7 +30,7 @@ namespace SimplerNews.API.Controllers
         [Route("api/Video/Videos")]
         public List<VideoDto> Videos(int? youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos)
         {
-            return _videosService.GetNewVideos(youtubeChannelId,from,to,search,numberOfVideos);
+            return _videosService.GetNewVideos(youtubeChannelId, from, to, search, numberOfVideos);
         }
 
 
@@ -46,7 +47,37 @@ namespace SimplerNews.API.Controllers
         public List<VideoDto> GetPersonalizedVideos(int numberOfVideos)
         {
             var id = User.Identity.GetUserId();
-            return _videosService.GetPersonalizedVideos(id,numberOfVideos);
+            return _videosService.GetPersonalizedVideos(id, numberOfVideos);
+        }
+
+        [HttpPut]
+        [Route("api/Video/Insert")]
+        public IHttpActionResult InsertVideo(VideoAPIModel video)
+        {
+            var result = _videosService.AddVideo(video);
+
+            if (result != 0)
+            {
+                return Ok(video);
+            }
+            return BadRequest();
+        }
+
+        [HttpPut]
+        [Route("api/Video/InsertBulk")]
+        public IHttpActionResult InsertVideo(List<VideoAPIModel> videos)
+        {
+            try
+            {
+                _videosService.AddBulkVideos(videos);
+
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest();
+            }
         }
     }
 }
