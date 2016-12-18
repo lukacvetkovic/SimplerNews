@@ -212,10 +212,12 @@ namespace BusinessServices.Implementation
             {
                 try
                 {
-
-                    var channel = _unitOfWork.YoutubeChannelRepository.GetSingle(
+                    var channel = _unitOfWork.YoutubeChannelRepository.GetFirst(
                         p => p.YoutubeChannelId == videoDto.json.snippet.channelId);
-                    if (channel == null)
+
+                    var category = _unitOfWork.VideoCategoryRepository.GetFirst(
+                                p => p.YoutbeVideoCategoryId == videoDto.json.snippet.categoryId);
+                    if (channel == null || category == null)
                     {
                         scope.Complete();
                         return -1;
@@ -223,13 +225,11 @@ namespace BusinessServices.Implementation
 
                     var video = new Video
                     {
-                        YoutubeChannelId =channel.Id,
+                        YoutubeChannelId = channel.Id,
                         Description = videoDto.json.snippet.description,
                         PublishedAt = DateTime.Parse(videoDto.json.snippet.publishedAt),
                         Title = videoDto.json.snippet.title,
-                        VideoCategoryId =
-                            _unitOfWork.VideoCategoryRepository.GetSingle(
-                                p => p.YoutbeVideoCategoryId == videoDto.json.snippet.categoryId).Id,
+                        VideoCategoryId = category.Id,
                         VideoTag = videoDto.json.snippet?.tags.Select(p => new VideoTag() { Tag = p }).ToList(),
                         YoutubeId = videoDto.json.id,
                         YoutubeLink = null,
@@ -278,24 +278,17 @@ namespace BusinessServices.Implementation
 
         public void AddBulkVideos(List<VideoFromService> videos)
         {
-            using (var scope = new TransactionScope())
-            {
-                foreach (var videoDto in videos)
-                {
-                    try
-                    {
-                        AddVideo(videoDto);
-                    }
-                    catch (Exception e)
-                    {
-                        throw;
 
-                    }
+            foreach (var videoDto in videos)
+            {
+                try
+                {
+                    AddVideo(videoDto);
+                }
+                catch (Exception e)
+                {
 
                 }
-
-                _unitOfWork.Save();
-                scope.Complete();
             }
         }
     }

@@ -74,6 +74,10 @@ namespace SimplerNews.API.Controllers
         [Route("api/Video/InsertBulk")]
         public IHttpActionResult InsertVideo(List<VideoFromService> videos)
         {
+            if (videos == null)
+            {
+                throw new ArgumentException("VIDEOS ARE NULL");
+            }
             try
             {
                 _videosService.AddBulkVideos(videos);
@@ -83,7 +87,7 @@ namespace SimplerNews.API.Controllers
             catch (Exception e)
             {
 
-                return BadRequest();
+                throw e;
             }
         }
     }
