@@ -65,8 +65,8 @@ namespace BusinessServices.Implementation
                         VideoTagList = video.VideoTag.ToList().Select(p => p.Tag).ToList(),
                         YoutubeLink = video.YoutubeLink,
                         NumberOfDislikes = video.NumberOfDislikes ?? 0,
-                        NumberOfViews = video.NumberOfViews ??0,
-                        NumberOfLikes = video.NumberOfLikes ??0,
+                        NumberOfViews = video.NumberOfViews ?? 0,
+                        NumberOfLikes = video.NumberOfLikes ?? 0,
                         Etag = video.Etag,
                         NumberOfComments = video.NumberOfComments ?? 0,
                         Kind = video.Kind
@@ -209,34 +209,49 @@ namespace BusinessServices.Implementation
         public int AddVideo(VideoFromService videoDto)
         {
             using (var scope = new TransactionScope())
-            {   
-                var video = new Video
+            {
+                try
                 {
-                    YoutubeChannelId =
-                        _unitOfWork.YoutubeChannelRepository.GetSingle(
-                            p => p.YoutubeChannelId == videoDto.json.snippet.channelId).Id,
-                    Description = videoDto.json.snippet.description,
-                    PublishedAt = DateTime.Parse(videoDto.json.snippet.publishedAt),
-                    Title = videoDto.json.snippet.title,
-                    VideoCategoryId =
-                        _unitOfWork.VideoCategoryRepository.GetSingle(
-                            p => p.YoutbeVideoCategoryId == videoDto.json.snippet.categoryId).Id,
-                    VideoTag = videoDto.json.snippet?.tags.Select(p => new VideoTag() { Tag = p }).ToList(),
-                    YoutubeId = videoDto.json.id,
-                    YoutubeLink = null,
-                    NumberOfDislikes = Convert.ToInt32(videoDto.json?.statistics?.dislikeCount),
-                    Etag = videoDto.json.etag,
-                    Id = -1,
-                    NumberOfViews = Convert.ToInt32(videoDto.json?.statistics?.viewCount),
-                    NumberOfLikes = Convert.ToInt32(videoDto.json?.statistics?.likeCount),
-                    Kind = videoDto.json.kind,
-                    NumberOfComments = Convert.ToInt32(videoDto.json?.statistics?.commentCount)
-                };
 
-                _unitOfWork.VideoRepository.Insert(video);
-                _unitOfWork.Save();
-                scope.Complete();
-                return video.Id;
+                    var channel = _unitOfWork.YoutubeChannelRepository.GetSingle(
+                        p => p.YoutubeChannelId == videoDto.json.snippet.channelId);
+                    if (channel == null)
+                    {
+                        scope.Complete();
+                        return -1;
+                    }
+
+                    var video = new Video
+                    {
+                        YoutubeChannelId =channel.Id,
+                        Description = videoDto.json.snippet.description,
+                        PublishedAt = DateTime.Parse(videoDto.json.snippet.publishedAt),
+                        Title = videoDto.json.snippet.title,
+                        VideoCategoryId =
+                            _unitOfWork.VideoCategoryRepository.GetSingle(
+                                p => p.YoutbeVideoCategoryId == videoDto.json.snippet.categoryId).Id,
+                        VideoTag = videoDto.json.snippet?.tags.Select(p => new VideoTag() { Tag = p }).ToList(),
+                        YoutubeId = videoDto.json.id,
+                        YoutubeLink = null,
+                        NumberOfDislikes = Convert.ToInt32(videoDto.json?.statistics?.dislikeCount),
+                        Etag = videoDto.json.etag,
+                        Id = -1,
+                        NumberOfViews = Convert.ToInt32(videoDto.json?.statistics?.viewCount),
+                        NumberOfLikes = Convert.ToInt32(videoDto.json?.statistics?.likeCount),
+                        Kind = videoDto.json.kind,
+                        NumberOfComments = Convert.ToInt32(videoDto.json?.statistics?.commentCount)
+                    };
+
+                    _unitOfWork.VideoRepository.Insert(video);
+                    _unitOfWork.Save();
+                    scope.Complete();
+                    return video.Id;
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
             }
         }
 
@@ -271,10 +286,10 @@ namespace BusinessServices.Implementation
                     {
                         AddVideo(videoDto);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        
-                        
+                        throw;
+
                     }
 
                 }
