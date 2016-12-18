@@ -60,7 +60,7 @@ namespace SimplerNews.API.Controllers
 
                 return Ok(true);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
                 return BadRequest();

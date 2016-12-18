@@ -65,7 +65,7 @@ namespace SimplerNews.API.Controllers
 
             if (result != 0)
             {
-                return Ok(video);
+                return Ok(result);
             }
             return BadRequest();
         }

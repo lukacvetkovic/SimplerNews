@@ -63,10 +63,10 @@ namespace BusinessServices.Implementation
                         YoutubeChannelId = channelDto.YoutubeChannelId
                     };
                     _unitOfWork.YoutubeChannelRepository.Insert(newchannel);
+                    _unitOfWork.Save();
                     channel = newchannel;
 
-                }
-                _unitOfWork.Save();
+                }                
                 scope.Complete();
                 return channel.Id;
             }
