@@ -84,7 +84,7 @@ namespace BusinessServices.Implementation
         {
             List<VideoDto> videoList = new List<VideoDto>();
 
-            var videosFromDb = _unitOfWork.VideoRepository.GetMany(p => p.PublishedAt > DateTime.Now.AddDays(-2)).ToList();
+            var videosFromDb = _unitOfWork.VideoRepository.GetMany(p => p.PublishedAt > DateTime.Now.AddDays(-2)).ToList().Take(numberOfVideos);
             if (videosFromDb.Any())
             {
                 foreach (var video in videosFromDb)
