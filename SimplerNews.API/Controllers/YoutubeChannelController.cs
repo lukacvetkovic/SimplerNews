@@ -40,7 +40,7 @@ namespace SimplerNews.API.Controllers
 
             if (result != 0)
             {
-                return Ok(channel);
+                return Ok(result);
             }
             return BadRequest();
         }

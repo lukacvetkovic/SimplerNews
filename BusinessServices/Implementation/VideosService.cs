@@ -233,7 +233,6 @@ namespace BusinessServices.Implementation
                     NumberOfComments = Convert.ToInt32(videoDto.json?.statistics?.commentCount)
                 };
 
-                ;
                 _unitOfWork.VideoRepository.Insert(video);
                 _unitOfWork.Save();
                 scope.Complete();

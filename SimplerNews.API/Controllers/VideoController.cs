@@ -27,7 +27,7 @@ namespace SimplerNews.API.Controllers
 
 
         [HttpGet]
-        [Route("api/Video/VideosForChanneč")]
+        [Route("api/Video/VideosForChannel")]
         public List<VideoDto> Videos(int youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos)
         {
             return _videosService.GetVideosForChannel(youtubeChannelId, from, to, search, numberOfVideos);
@@ -48,6 +48,13 @@ namespace SimplerNews.API.Controllers
         {
             var id = User.Identity.GetUserId();
             return _videosService.GetPersonalizedVideos(id, numberOfVideos);
+        }
+
+        [HttpGet]
+        [Route("api/Video/GetVidesByCategory")]
+        public List<VideoDto> GetVidesByCategory(int categoryId, int numberOfVideos)
+        {
+            return _videosService.GetVidesByCategory(categoryId, numberOfVideos);
         }
 
         [HttpPut]
