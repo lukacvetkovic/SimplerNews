@@ -81,11 +81,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Etag" Type="nvarchar" MaxLength="150" />
-          <Property Name="Kind" Type="nvarchar" MaxLength="150" />
-          <Property Name="YoutubeId" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" MaxLength="100" />
-          <Property Name="Description" Type="nvarchar" MaxLength="250" />
+          <Property Name="Etag" Type="nvarchar" MaxLength="250" />
+          <Property Name="Kind" Type="nvarchar" MaxLength="250" />
+          <Property Name="YoutubeId" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="YoutubeChannelId" Type="int" Nullable="false" />
           <Property Name="PublishedAt" Type="datetime" Nullable="false" />
           <Property Name="YoutubeLink" Type="nvarchar" MaxLength="250" />
@@ -100,7 +100,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="VideoCategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="VideoCategoryName" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="YoutbeVideoCategoryId" Type="nvarchar" MaxLength="5" Nullable="false" />
         </EntityType>
         <EntityType Name="VideoTag">
@@ -109,7 +109,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="VideoId" Type="int" Nullable="false" />
-          <Property Name="Tag" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Tag" Type="nvarchar" MaxLength="250" Nullable="false" />
         </EntityType>
         <EntityType Name="YoutubeChannel">
           <Key>
@@ -390,11 +390,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Etag" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="Kind" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="YoutubeId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Etag" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Kind" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="YoutubeId" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="YoutubeChannelId" Type="Int32" Nullable="false" />
           <Property Name="PublishedAt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="YoutubeLink" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
@@ -412,7 +412,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="VideoCategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="VideoCategoryName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="YoutbeVideoCategoryId" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_Video_VideoCategory" FromRole="VideoCategory" ToRole="Video" />
         </EntityType>
@@ -422,7 +422,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="VideoId" Type="Int32" Nullable="false" />
-          <Property Name="Tag" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Tag" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_VideoTags_Video" FromRole="VideoTag" ToRole="Video" />
         </EntityType>
         <EntityType Name="YoutubeChannel">

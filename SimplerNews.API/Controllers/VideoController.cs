@@ -70,7 +70,7 @@ namespace SimplerNews.API.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("api/Video/InsertBulk")]
         public IHttpActionResult InsertVideo(List<VideoFromService> videos)
         {
