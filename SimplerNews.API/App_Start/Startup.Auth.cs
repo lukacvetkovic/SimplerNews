@@ -51,13 +51,13 @@ namespace SimplerNews.API
             //    clientId: "",
             //    clientSecret: "");
 
-            //app.UseTwitterAuthentication(
-            //    consumerKey: "",
-            //    consumerSecret: "");
+            app.UseTwitterAuthentication(
+                consumerKey: "nb0dPrZMj99kLQMnsRnnXEodO",
+                consumerSecret: "bzxayJX1b8N1Nps7MSPKbe4Ve07M5N3dLFUw0XWwJFGDndBsfO");
 
-            //app.UseFacebookAuthentication(
-            //    appId: "1816770078541279",
-            //    appSecret: "4dba6c34263064d5ed56d891e904ab12");
+            app.UseFacebookAuthentication(
+                appId: "1816770078541279",
+                appSecret: "4dba6c34263064d5ed56d891e904ab12");
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
