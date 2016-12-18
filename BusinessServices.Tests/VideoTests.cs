@@ -23,22 +23,22 @@ namespace BusinessServices.Tests
         [TestMethod]
         public void InsertGetUpdateDeleteVideo()
         {
-            string videoName = "Video" + Guid.NewGuid();
+            //string videoName = "Video" + Guid.NewGuid();
 
-            var model = new VideoAPIModel()
-            {
-                Description = "Test video",
-                PublishedAt = DateTime.Now,
-                Title = "Test",
-                VideoCategoryId = "29",
-                VideoTagList = new List<string>() { "Test","Testni"},
-                YoutubeChannelId = "Test124",
-                YoutubeId = "gtdaghs513",
-                YoutubeLink = "www.youtube.com?v=gansdgda",
-                Id = -1
-            };
+            //var model = new VideoAPIModel()
+            //{
+            //    Description = "Test video",
+            //    PublishedAt = DateTime.Now,
+            //    Title = "Test",
+            //    VideoCategoryId = "29",
+            //    VideoTagList = new List<string>() { "Test","Testni"},
+            //    YoutubeChannelId = "Test124",
+            //    YoutubeId = "gtdaghs513",
+            //    YoutubeLink = "www.youtube.com?v=gansdgda",
+            //    Id = -1
+            //};
 
-            _videosServiceService.AddVideo(model);
+            //_videosServiceService.AddVideo(model);
 
             
         }

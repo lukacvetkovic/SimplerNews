@@ -52,7 +52,7 @@ namespace SimplerNews.API.Controllers
 
         [HttpPut]
         [Route("api/Video/Insert")]
-        public IHttpActionResult InsertVideo(VideoAPIModel video)
+        public IHttpActionResult InsertVideo(VideoFromService video)
         {
             var result = _videosService.AddVideo(video);
 
@@ -65,7 +65,7 @@ namespace SimplerNews.API.Controllers
 
         [HttpPut]
         [Route("api/Video/InsertBulk")]
-        public IHttpActionResult InsertVideo(List<VideoAPIModel> videos)
+        public IHttpActionResult InsertVideo(List<VideoFromService> videos)
         {
             try
             {

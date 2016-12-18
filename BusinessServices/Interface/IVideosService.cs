@@ -12,8 +12,8 @@ namespace BusinessServices.Interface
         List<VideoDto> GetPersonalizedVideos(string aspNetUserId, int numberOfVideos);
         List<VideoDto> GetVidesByCategory(int categoryId, int numberOfVideos);
 
-        int AddVideo(VideoAPIModel videoDto);
+        int AddVideo(VideoFromService videoDto);
         bool RemoveVideo(int videoId);
-        void AddBulkVideos(List<VideoAPIModel> videos);
+        void AddBulkVideos(List<VideoFromService> videos);
     }
 }

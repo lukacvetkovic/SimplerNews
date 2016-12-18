@@ -63,10 +63,15 @@ namespace BusinessServices.Implementation
                         YoutubeId = video.YoutubeId,
                         Title = video.Title,
                         VideoTagList = video.VideoTag.ToList().Select(p => p.Tag).ToList(),
-                        YoutubeLink = video.YoutubeLink
+                        YoutubeLink = video.YoutubeLink,
+                        NumberOfDislikes = video.NumberOfDislikes ?? 0,
+                        NumberOfViews = video.NumberOfViews ??0,
+                        NumberOfLikes = video.NumberOfLikes ??0,
+                        Etag = video.Etag,
+                        NumberOfComments = video.NumberOfComments ?? 0,
+                        Kind = video.Kind
                     };
 
-                    //TODO calculate likes, dislikes,...
                     videoList.Add(videoDto);
                 }
 
@@ -88,16 +93,27 @@ namespace BusinessServices.Implementation
                     {
                         YoutubeChannelId = video.YoutubeChannelId,
                         Description = video.Description,
-                        VideoCategory = new VideoCategoryDto() { Id = video.VideoCategory.Id, YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId, VideoCategoryName = video.VideoCategory.VideoCategoryName },
+                        VideoCategory =
+                            new VideoCategoryDto()
+                            {
+                                Id = video.VideoCategory.Id,
+                                YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId,
+                                VideoCategoryName = video.VideoCategory.VideoCategoryName
+                            },
                         Id = video.Id,
                         PublishedAt = video.PublishedAt,
                         YoutubeId = video.YoutubeId,
                         Title = video.Title,
                         VideoTagList = video.VideoTag.ToList().Select(p => p.Tag).ToList(),
-                        YoutubeLink = video.YoutubeLink
+                        YoutubeLink = video.YoutubeLink,
+                        NumberOfDislikes = video.NumberOfDislikes ?? 0,
+                        NumberOfViews = video.NumberOfViews ?? 0,
+                        NumberOfLikes = video.NumberOfLikes ?? 0,
+                        Etag = video.Etag,
+                        NumberOfComments = video.NumberOfComments ?? 0,
+                        Kind = video.Kind
                     };
 
-                    //TODO calculate likes, dislikes,... and take numberofvideos
 
                     videoList.Add(videoDto);
                 }
@@ -121,16 +137,27 @@ namespace BusinessServices.Implementation
                     {
                         YoutubeChannelId = video.YoutubeChannelId,
                         Description = video.Description,
-                        VideoCategory = new VideoCategoryDto() { Id = video.VideoCategory.Id, YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId, VideoCategoryName = video.VideoCategory.VideoCategoryName },
+                        VideoCategory =
+                            new VideoCategoryDto()
+                            {
+                                Id = video.VideoCategory.Id,
+                                YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId,
+                                VideoCategoryName = video.VideoCategory.VideoCategoryName
+                            },
                         Id = video.Id,
                         PublishedAt = video.PublishedAt,
                         YoutubeId = video.YoutubeId,
                         Title = video.Title,
                         VideoTagList = video.VideoTag.ToList().Select(p => p.Tag).ToList(),
-                        YoutubeLink = video.YoutubeLink
+                        YoutubeLink = video.YoutubeLink,
+                        NumberOfDislikes = video.NumberOfDislikes ?? 0,
+                        NumberOfViews = video.NumberOfViews ?? 0,
+                        NumberOfLikes = video.NumberOfLikes ?? 0,
+                        Etag = video.Etag,
+                        NumberOfComments = video.NumberOfComments ?? 0,
+                        Kind = video.Kind
                     };
 
-                    //TODO calculate likes, dislikes,...
                     videoList.Add(videoDto);
                 }
             }
@@ -151,16 +178,27 @@ namespace BusinessServices.Implementation
                     {
                         YoutubeChannelId = video.YoutubeChannelId,
                         Description = video.Description,
-                        VideoCategory = new VideoCategoryDto() { Id = video.VideoCategory.Id, YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId, VideoCategoryName = video.VideoCategory.VideoCategoryName },
+                        VideoCategory =
+                            new VideoCategoryDto()
+                            {
+                                Id = video.VideoCategory.Id,
+                                YoutbeVideoCategoryId = video.VideoCategory.YoutbeVideoCategoryId,
+                                VideoCategoryName = video.VideoCategory.VideoCategoryName
+                            },
                         Id = video.Id,
                         PublishedAt = video.PublishedAt,
                         YoutubeId = video.YoutubeId,
                         Title = video.Title,
                         VideoTagList = video.VideoTag.ToList().Select(p => p.Tag).ToList(),
-                        YoutubeLink = video.YoutubeLink
+                        YoutubeLink = video.YoutubeLink,
+                        NumberOfDislikes = video.NumberOfDislikes ?? 0,
+                        NumberOfViews = video.NumberOfViews ?? 0,
+                        NumberOfLikes = video.NumberOfLikes ?? 0,
+                        Etag = video.Etag,
+                        NumberOfComments = video.NumberOfComments ?? 0,
+                        Kind = video.Kind
                     };
 
-                    //TODO calculate likes, dislikes,...
                     videoList.Add(videoDto);
                 }
             }
@@ -168,24 +206,31 @@ namespace BusinessServices.Implementation
             return videoList;
         }
 
-        public int AddVideo(VideoAPIModel videoDto)
+        public int AddVideo(VideoFromService videoDto)
         {
             using (var scope = new TransactionScope())
-            {
+            {   
                 var video = new Video
                 {
                     YoutubeChannelId =
                         _unitOfWork.YoutubeChannelRepository.GetSingle(
-                            p => p.YoutubeChannelId == videoDto.YoutubeChannelId).Id,
-                    Description = videoDto.Description,
-                    PublishedAt = videoDto.PublishedAt,
-                    Title = videoDto.Title,
+                            p => p.YoutubeChannelId == videoDto.json.snippet.channelId).Id,
+                    Description = videoDto.json.snippet.description,
+                    PublishedAt = DateTime.Parse(videoDto.json.snippet.publishedAt),
+                    Title = videoDto.json.snippet.title,
                     VideoCategoryId =
                         _unitOfWork.VideoCategoryRepository.GetSingle(
-                            p => p.YoutbeVideoCategoryId == videoDto.VideoCategoryId).Id,
-                    VideoTag = videoDto.VideoTagList.Select(p => new VideoTag() { Tag = p }).ToList(),
-                    YoutubeId = videoDto.YoutubeId,
-                    YoutubeLink = videoDto.YoutubeLink
+                            p => p.YoutbeVideoCategoryId == videoDto.json.snippet.categoryId).Id,
+                    VideoTag = videoDto.json.snippet?.tags.Select(p => new VideoTag() { Tag = p }).ToList(),
+                    YoutubeId = videoDto.json.id,
+                    YoutubeLink = null,
+                    NumberOfDislikes = Convert.ToInt32(videoDto.json?.statistics?.dislikeCount),
+                    Etag = videoDto.json.etag,
+                    Id = -1,
+                    NumberOfViews = Convert.ToInt32(videoDto.json?.statistics?.viewCount),
+                    NumberOfLikes = Convert.ToInt32(videoDto.json?.statistics?.likeCount),
+                    Kind = videoDto.json.kind,
+                    NumberOfComments = Convert.ToInt32(videoDto.json?.statistics?.commentCount)
                 };
 
                 ;
@@ -217,25 +262,21 @@ namespace BusinessServices.Implementation
             return success;
         }
 
-        public void AddBulkVideos(List<VideoAPIModel> videos)
+        public void AddBulkVideos(List<VideoFromService> videos)
         {
             using (var scope = new TransactionScope())
             {
                 foreach (var videoDto in videos)
                 {
-
-                    var video = new Video();
-
-                    video.YoutubeChannelId = _unitOfWork.YoutubeChannelRepository.GetSingle(p => p.YoutubeChannelId == videoDto.YoutubeChannelId).Id;
-                    video.Description = videoDto.Description;
-                    video.PublishedAt = videoDto.PublishedAt;
-                    video.Title = videoDto.Title;
-                    video.VideoCategoryId = _unitOfWork.VideoCategoryRepository.GetSingle(p => p.YoutbeVideoCategoryId == videoDto.VideoCategoryId).Id;
-                    video.VideoTag = videoDto.VideoTagList.Select(p => new VideoTag() { Tag = p }).ToList();
-                    video.YoutubeId = videoDto.YoutubeId;
-                    video.YoutubeLink = videoDto.YoutubeLink;
-                    ;
-                    _unitOfWork.VideoRepository.Insert(video);
+                    try
+                    {
+                        AddVideo(videoDto);
+                    }
+                    catch (Exception)
+                    {
+                        
+                        
+                    }
 
                 }
 

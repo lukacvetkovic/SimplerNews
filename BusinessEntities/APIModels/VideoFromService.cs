@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessEntities.BusinessModels;
 
 namespace BusinessEntities.APIModels
 {
@@ -98,6 +99,9 @@ namespace BusinessEntities.APIModels
     public class VideoFromService
     {
         public string id { get; set; }
-        public List<Json> json { get; set; }
+        public Json json { get; set; }
+
     }
+
+
 }

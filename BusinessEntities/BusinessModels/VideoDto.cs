@@ -12,6 +12,8 @@ namespace BusinessEntities.BusinessModels
     public class VideoDto
     {
         public int Id { get; set; }
+        public string Etag { get; set; }
+        public string Kind { get; set; }
         public string YoutubeId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -21,7 +23,7 @@ namespace BusinessEntities.BusinessModels
         public int NumberOfViews { get; set; }
         public int NumberOfLikes { get; set; }
         public int NumberOfDislikes { get; set; }
-
+        public int NumberOfComments { get; set; }
         public VideoCategoryDto VideoCategory { get; set; }
         public List<String> VideoTagList { get; set; }
 
