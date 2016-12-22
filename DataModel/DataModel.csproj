@@ -90,19 +90,13 @@
     <Compile Include="GenericRepository\IGenericRepository.cs" />
     <Compile Include="Helpers\HelperService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLDatabase\AspNetRoles.cs">
+    <Compile Include="SQLDatabase\FacebookCategory.cs">
       <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="SQLDatabase\AspNetUserClaims.cs">
+    <Compile Include="SQLDatabase\FacebookYoutubeMapping.cs">
       <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="SQLDatabase\AspNetUserLogins.cs">
-      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SQLDatabase\AspNetUsers.cs">
-      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SQLDatabase\C__MigrationHistory.cs">
+    <Compile Include="SQLDatabase\GetHotVideos_Result.cs">
       <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
     </Compile>
     <Compile Include="SQLDatabase\SimplerNewsSQLDb.Context.cs">
@@ -120,7 +114,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SimplerNewsSQLDb.edmx</DependentUpon>
     </Compile>
-    <Compile Include="SQLDatabase\UserInformation.cs">
+    <Compile Include="SQLDatabase\User.cs">
+      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SQLDatabase\UserPreferences.cs">
+      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SQLDatabase\UserVideoWatched.cs">
       <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
     </Compile>
     <Compile Include="SQLDatabase\Video.cs">

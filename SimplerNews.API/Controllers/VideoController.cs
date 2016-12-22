@@ -22,40 +22,39 @@ namespace SimplerNews.API.Controllers
 
         public VideoController()
         {
-            _videosService = new VideosService();
-        }
-
-
-        [HttpGet]
-        [Route("api/Video/VideosForChannel")]
-        public List<VideoDto> Videos(int youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos)
-        {
-            return _videosService.GetVideosForChannel(youtubeChannelId, from, to, search, numberOfVideos);
+            _videosService = ServicesFactory.GetVideoServices();
         }
 
 
         [HttpGet]
         [Route("api/Video/HotVideos")]
-        public List<VideoDto> GetHotVideos(int numberOfVideos)
+        public List<VideoDto> GetHotVideos(int numberOfVideos, string token)
         {
-            return _videosService.GetHotVideos(numberOfVideos);
+            return _videosService.GetHotVideos(numberOfVideos,token);
         }
 
 
         [HttpGet]
         [Route("api/Video/PersonalizedVideos")]
-        public List<VideoDto> GetPersonalizedVideos(int numberOfVideos)
+        public List<VideoDto> GetPersonalizedVideos(int numberOfVideos, string token)
         {
             var id = User.Identity.GetUserId();
             return _videosService.GetPersonalizedVideos(id, numberOfVideos);
         }
 
-        [HttpGet]
-        [Route("api/Video/GetVidesByCategory")]
-        public List<VideoDto> GetVidesByCategory(int categoryId, int numberOfVideos)
-        {
-            return _videosService.GetVidesByCategory(categoryId, numberOfVideos);
-        }
+        //[HttpGet]
+        //[Route("api/Video/GetVidesByCategory")]
+        //public List<VideoDto> GetVidesByCategory(int categoryId, int numberOfVideos)
+        //{
+        //    return _videosService.GetVidesByCategory(categoryId, numberOfVideos);
+        //}
+
+        //[HttpGet]
+        //[Route("api/Video/VideosForChannel")]
+        //public List<VideoDto> Videos(int youtubeChannelId, DateTime from, DateTime to, string search, int numberOfVideos)
+        //{
+        //    return _videosService.GetVideosForChannel(youtubeChannelId, from, to, search, numberOfVideos);
+        //}
 
         [HttpPut]
         [Route("api/Video/Insert")]

@@ -5,23 +5,24 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="e86325de87e14355a73ac2c868982b51" Name="Diagram1">
-        <EntityTypeShape EntityType="SimplerNewsDbModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="9.25" />
-        <EntityTypeShape EntityType="SimplerNewsDbModel.AspNetRoles" Width="1.5" PointX="0.75" PointY="5.625" />
-        <EntityTypeShape EntityType="SimplerNewsDbModel.AspNetUserClaims" Width="1.5" PointX="5.25" PointY="2.625" />
-        <EntityTypeShape EntityType="SimplerNewsDbModel.AspNetUserLogins" Width="1.5" PointX="5.25" PointY="5.375" />
-        <EntityTypeShape EntityType="SimplerNewsDbModel.AspNetUsers" Width="1.5" PointX="3" PointY="4.375" />
-        <EntityTypeShape EntityType="SimplerNewsDbModel.UserInformation" Width="1.5" PointX="5.25" PointY="7.875" />
-        <EntityTypeShape EntityType="SimplerNewsDbModel.Video" Width="1.5" PointX="10" PointY="2.5" />
-        <EntityTypeShape EntityType="SimplerNewsDbModel.VideoCategory" Width="1.5" PointX="7.75" PointY="0.75" />
-        <EntityTypeShape EntityType="SimplerNewsDbModel.VideoTag" Width="1.5" PointX="12.25" PointY="3.75" />
-        <EntityTypeShape EntityType="SimplerNewsDbModel.YoutubeChannel" Width="1.5" PointX="7.75" PointY="3.5" />
-        <AssociationConnector Association="SimplerNewsDbModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
-        <AssociationConnector Association="SimplerNewsDbModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
-        <AssociationConnector Association="SimplerNewsDbModel.FK_UserInformation_AspNetUsers" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.FacebookCategory" Width="1.5" PointX="0.75" PointY="2.625" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.FacebookYoutubeMapping" Width="1.5" PointX="3" PointY="2.375" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.User" Width="1.5" PointX="0.75" PointY="8.375" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.UserPreferences" Width="1.5" PointX="3" PointY="5.375" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.UserVideoWatched" Width="1.5" PointX="9.5" PointY="4.875" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.Video" Width="1.5" PointX="6" PointY="4.125" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.VideoCategory" Width="1.5" PointX="0.75" PointY="5.375" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.VideoTag" Width="1.5" PointX="8.25" PointY="8.25" />
+        <EntityTypeShape EntityType="SimplerNewsDbModel.YoutubeChannel" Width="1.5" PointX="3.75" PointY="8.375" />
+        <AssociationConnector Association="SimplerNewsDbModel.FK_FacebookYoutubeMapping_FacebookCategory" />
+        <AssociationConnector Association="SimplerNewsDbModel.FK_FacebookYoutubeMapping_VideoCategory" />
+        <AssociationConnector Association="SimplerNewsDbModel.FK_UserPreferences_User" />
+        <AssociationConnector Association="SimplerNewsDbModel.FK_UserVideoWatched_User" />
+        <AssociationConnector Association="SimplerNewsDbModel.FK_UserPreferences_VideoCategory" />
+        <AssociationConnector Association="SimplerNewsDbModel.FK_UserVideoWatched_Video" />
         <AssociationConnector Association="SimplerNewsDbModel.FK_Video_VideoCategory" />
         <AssociationConnector Association="SimplerNewsDbModel.FK_Video_YoutubeChannel" />
         <AssociationConnector Association="SimplerNewsDbModel.FK_VideoTags_Video" />
-        <AssociationConnector Association="SimplerNewsDbModel.AspNetUserRoles" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

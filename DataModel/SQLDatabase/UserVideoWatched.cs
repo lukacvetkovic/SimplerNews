@@ -12,12 +12,13 @@ namespace DataModel.SQLDatabase
     using System;
     using System.Collections.Generic;
     
-    public partial class AspNetUserLogins
+    public partial class UserVideoWatched
     {
-        public string LoginProvider { get; set; }
-        public string ProviderKey { get; set; }
-        public string UserId { get; set; }
+        public int Id { get; set; }
+        public int VideoId { get; set; }
+        public int UserId { get; set; }
     
-        public virtual AspNetUsers AspNetUsers { get; set; }
+        public virtual User User { get; set; }
+        public virtual Video Video { get; set; }
     }
 }

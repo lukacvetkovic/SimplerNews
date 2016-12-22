@@ -115,6 +115,11 @@ namespace DataModel.GenericRepository
             return DbSet.Where(where).ToList();
         }
 
+        public IEnumerable<TEntity> GetTopMany(Func<TEntity, bool> @where, int number)
+        {
+            return DbSet.Where(where).Take(number);
+        }
+
         /// <summary>
         /// generic method to get many record on the basis of a condition but query able.
         /// </summary>

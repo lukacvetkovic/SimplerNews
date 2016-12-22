@@ -18,10 +18,11 @@ namespace DataModel.UnitOfWork
         #region Private member variables...
 
         private SimplerNewsSQLDb _context = null;
-        private IGenericRepository<UserInformation> _userInformationRepository;
         private IGenericRepository<YoutubeChannel> _youtubeChannelRepository;
         private IGenericRepository<VideoCategory> _videoCategoryRepository;
         private IGenericRepository<Video> _videoRepository;
+        private IGenericRepository<User> _userRepository;
+        private IGenericRepository<UserVideoWatched> _userVideoWatchedRepository;
         #endregion
 
         public UnitOfWork()
@@ -30,19 +31,6 @@ namespace DataModel.UnitOfWork
         }
 
         #region Public Repository Creation properties...
-
-        /// <summary>
-        /// Get/Set Property for product repository.
-        /// </summary>
-        public IGenericRepository<UserInformation> UserInformationRepository
-        {
-            get
-            {
-                if (this._userInformationRepository == null)
-                    this._userInformationRepository = new GenericRepositorySQL<UserInformation>(_context);
-                return _userInformationRepository;
-            }
-        }
 
         public IGenericRepository<YoutubeChannel> YoutubeChannelRepository
         {
@@ -71,6 +59,26 @@ namespace DataModel.UnitOfWork
                 if (this._videoCategoryRepository == null)
                     this._videoCategoryRepository = new GenericRepositorySQL<VideoCategory>(_context);
                 return _videoCategoryRepository;
+            }
+        }
+
+        public IGenericRepository<User> UserRepository
+        {
+            get
+            {
+                if (this._userRepository == null)
+                    this._userRepository = new GenericRepositorySQL<User>(_context);
+                return _userRepository;
+            }
+        }
+
+        public IGenericRepository<UserVideoWatched> UserVideoWatchedRepository
+        {
+            get
+            {
+                if (this._userVideoWatchedRepository == null)
+                    this._userVideoWatchedRepository = new GenericRepositorySQL<UserVideoWatched>(_context);
+                return _userVideoWatchedRepository;
             }
         }
         #endregion

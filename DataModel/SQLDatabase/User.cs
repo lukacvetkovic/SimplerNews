@@ -12,25 +12,23 @@ namespace DataModel.SQLDatabase
     using System;
     using System.Collections.Generic;
     
-    public partial class VideoCategory
+    public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public VideoCategory()
+        public User()
         {
-            this.FacebookYoutubeMapping = new HashSet<FacebookYoutubeMapping>();
             this.UserPreferences = new HashSet<UserPreferences>();
-            this.Video = new HashSet<Video>();
+            this.UserVideoWatched = new HashSet<UserVideoWatched>();
         }
     
         public int Id { get; set; }
-        public string VideoCategoryName { get; set; }
-        public string YoutbeVideoCategoryId { get; set; }
+        public string Email { get; set; }
+        public string Token { get; set; }
+        public string Gender { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FacebookYoutubeMapping> FacebookYoutubeMapping { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserPreferences> UserPreferences { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Video> Video { get; set; }
+        public virtual ICollection<UserVideoWatched> UserVideoWatched { get; set; }
     }
 }

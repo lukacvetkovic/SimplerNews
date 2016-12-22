@@ -17,6 +17,7 @@ namespace DataModel.GenericRepository
         TEntity GetByID(object id);
         TEntity GetFirst(Func<TEntity, bool> predicate);
         IEnumerable<TEntity> GetMany(Func<TEntity, bool> where);
+        IEnumerable<TEntity> GetTopMany(Func<TEntity, bool> where, int number);
         IQueryable<TEntity> GetManyQueryable(Func<TEntity, bool> where);
         TEntity GetSingle(Func<TEntity, bool> predicate);
         IQueryable<TEntity> GetWithInclude(Expression<Func<TEntity, bool>> predicate, params string[] include);

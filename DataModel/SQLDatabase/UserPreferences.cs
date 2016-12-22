@@ -12,14 +12,14 @@ namespace DataModel.SQLDatabase
     using System;
     using System.Collections.Generic;
     
-    public partial class UserInformation
+    public partial class UserPreferences
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Location { get; set; }
-        public string UserId { get; set; }
+        public int UserId { get; set; }
+        public int YoutubeCategoryId { get; set; }
+        public decimal Score { get; set; }
     
-        public virtual AspNetUsers AspNetUsers { get; set; }
+        public virtual User User { get; set; }
+        public virtual VideoCategory VideoCategory { get; set; }
     }
 }

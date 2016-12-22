@@ -14,5 +14,12 @@ namespace BusinessServices
         {
             return new YoutubeChannelsService();
         }
+
+        public static IUserServices GetUserServices()
+        {
+            return new UserServices();
+        }
+
+
     }
 }

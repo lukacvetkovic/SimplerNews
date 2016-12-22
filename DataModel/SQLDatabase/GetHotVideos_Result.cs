@@ -10,17 +10,9 @@
 namespace DataModel.SQLDatabase
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Video
+    public partial class GetHotVideos_Result
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Video()
-        {
-            this.UserVideoWatched = new HashSet<UserVideoWatched>();
-            this.VideoTag = new HashSet<VideoTag>();
-        }
-    
         public int Id { get; set; }
         public string Etag { get; set; }
         public string Kind { get; set; }
@@ -35,12 +27,5 @@ namespace DataModel.SQLDatabase
         public Nullable<int> NumberOfDislikes { get; set; }
         public Nullable<int> NumberOfComments { get; set; }
         public Nullable<int> VideoCategoryId { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserVideoWatched> UserVideoWatched { get; set; }
-        public virtual VideoCategory VideoCategory { get; set; }
-        public virtual YoutubeChannel YoutubeChannel { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<VideoTag> VideoTag { get; set; }
     }
 }

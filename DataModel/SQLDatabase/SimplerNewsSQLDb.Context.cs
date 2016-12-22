@@ -12,6 +12,8 @@ namespace DataModel.SQLDatabase
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class SimplerNewsSQLDb : DbContext
     {
@@ -25,15 +27,31 @@ namespace DataModel.SQLDatabase
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
-        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
-        public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
-        public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public virtual DbSet<UserInformation> UserInformation { get; set; }
+        public virtual DbSet<FacebookCategory> FacebookCategory { get; set; }
+        public virtual DbSet<FacebookYoutubeMapping> FacebookYoutubeMapping { get; set; }
+        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<UserPreferences> UserPreferences { get; set; }
+        public virtual DbSet<UserVideoWatched> UserVideoWatched { get; set; }
         public virtual DbSet<Video> Video { get; set; }
         public virtual DbSet<VideoCategory> VideoCategory { get; set; }
         public virtual DbSet<VideoTag> VideoTag { get; set; }
         public virtual DbSet<YoutubeChannel> YoutubeChannel { get; set; }
+    
+        public virtual ObjectResult<GetHotVideos_Result> GetHotVideos(Nullable<int> userId, Nullable<System.DateTime> dateFrom, Nullable<int> numberOfVideos)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var numberOfVideosParameter = numberOfVideos.HasValue ?
+                new ObjectParameter("NumberOfVideos", numberOfVideos) :
+                new ObjectParameter("NumberOfVideos", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetHotVideos_Result>("GetHotVideos", userIdParameter, dateFromParameter, numberOfVideosParameter);
+        }
     }
 }

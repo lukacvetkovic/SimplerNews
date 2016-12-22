@@ -12,13 +12,13 @@ namespace DataModel.SQLDatabase
     using System;
     using System.Collections.Generic;
     
-    public partial class AspNetUserClaims
+    public partial class FacebookYoutubeMapping
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
-        public string ClaimType { get; set; }
-        public string ClaimValue { get; set; }
+        public int FacebookCategoryId { get; set; }
+        public int VideoCategoryId { get; set; }
     
-        public virtual AspNetUsers AspNetUsers { get; set; }
+        public virtual FacebookCategory FacebookCategory { get; set; }
+        public virtual VideoCategory VideoCategory { get; set; }
     }
 }

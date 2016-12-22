@@ -59,6 +59,7 @@
     <Folder Include="Properties" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Stored Procedures\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LocalToAzure.scmp" />
@@ -67,14 +68,19 @@
   <ItemGroup>
     <Build Include="dbo\Tables\YoutubeChannel.sql" />
     <Build Include="dbo\Tables\Video.sql" />
-    <Build Include="dbo\Tables\UserInformation.sql" />
     <Build Include="dbo\Tables\AspNetUsers.sql" />
     <Build Include="dbo\Tables\AspNetUserRoles.sql" />
     <Build Include="dbo\Tables\AspNetUserLogins.sql" />
     <Build Include="dbo\Tables\AspNetUserClaims.sql" />
     <Build Include="dbo\Tables\AspNetRoles.sql" />
-    <Build Include="dbo\Tables\__MigrationHistory.sql" />
     <Build Include="dbo\Tables\VideoTag.sql" />
     <Build Include="dbo\Tables\VideoCategory.sql" />
+    <Build Include="dbo\Tables\UserVideoWatched.sql" />
+    <Build Include="dbo\Tables\UserPreferences.sql" />
+    <Build Include="dbo\Tables\User.sql" />
+    <Build Include="dbo\Tables\FacebookYoutubeMapping.sql" />
+    <Build Include="dbo\Tables\FacebookCategory.sql" />
+    <Build Include="dbo\Stored Procedures\GetHotVideos.sql" />
+    <Build Include="dbo\Stored Procedures\ResetUserPreferences.sql" />
   </ItemGroup>
 </Project>

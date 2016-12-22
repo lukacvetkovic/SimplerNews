@@ -5,76 +5,46 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="SimplerNewsDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="__MigrationHistory">
-          <Key>
-            <PropertyRef Name="MigrationId" />
-            <PropertyRef Name="ContextKey" />
-          </Key>
-          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
-          <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
-          <Property Name="Model" Type="varbinary(max)" Nullable="false" />
-          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetRoles">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetUserClaims">
+        <EntityType Name="FacebookCategory">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="ClaimType" Type="nvarchar(max)" />
-          <Property Name="ClaimValue" Type="nvarchar(max)" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="150" Nullable="false" />
         </EntityType>
-        <EntityType Name="AspNetUserLogins">
-          <Key>
-            <PropertyRef Name="LoginProvider" />
-            <PropertyRef Name="ProviderKey" />
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetUserRoles">
-          <Key>
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetUsers">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="Email" Type="nvarchar" MaxLength="256" />
-          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
-          <Property Name="PasswordHash" Type="nvarchar(max)" />
-          <Property Name="SecurityStamp" Type="nvarchar(max)" />
-          <Property Name="PhoneNumber" Type="nvarchar(max)" />
-          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
-          <Property Name="LockoutEndDateUtc" Type="datetime" />
-          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
-          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
-        </EntityType>
-        <EntityType Name="UserInformation">
+        <EntityType Name="FacebookYoutubeMapping">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Email" Type="nvarchar" MaxLength="50" />
-          <Property Name="Location" Type="nvarchar" MaxLength="50" />
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="FacebookCategoryId" Type="int" Nullable="false" />
+          <Property Name="VideoCategoryId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Token" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="UserPreferences">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="YoutubeCategoryId" Type="int" Nullable="false" />
+          <Property Name="Score" Type="decimal" Precision="10" Scale="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserVideoWatched">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VideoId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Video">
           <Key>
@@ -121,71 +91,75 @@
           <Property Name="YoutubeChannelId" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="UploadPlaylistId" Type="nvarchar" MaxLength="150" />
         </EntityType>
-        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+        <Association Name="FK_FacebookYoutubeMapping_FacebookCategory">
+          <End Role="FacebookCategory" Type="Self.FacebookCategory" Multiplicity="1" />
+          <End Role="FacebookYoutubeMapping" Type="Self.FacebookYoutubeMapping" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
+            <Principal Role="FacebookCategory">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="AspNetUserClaims">
+            <Dependent Role="FacebookYoutubeMapping">
+              <PropertyRef Name="FacebookCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FacebookYoutubeMapping_VideoCategory">
+          <End Role="VideoCategory" Type="Self.VideoCategory" Multiplicity="1" />
+          <End Role="FacebookYoutubeMapping" Type="Self.FacebookYoutubeMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VideoCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FacebookYoutubeMapping">
+              <PropertyRef Name="VideoCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPreferences_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserPreferences" Type="Self.UserPreferences" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserPreferences">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+        <Association Name="FK_UserPreferences_VideoCategory">
+          <End Role="VideoCategory" Type="Self.VideoCategory" Multiplicity="1" />
+          <End Role="UserPreferences" Type="Self.UserPreferences" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
+            <Principal Role="VideoCategory">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="AspNetUserLogins">
+            <Dependent Role="UserPreferences">
+              <PropertyRef Name="YoutubeCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserVideoWatched_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserVideoWatched" Type="Self.UserVideoWatched" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserVideoWatched">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
-          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+        <Association Name="FK_UserVideoWatched_Video">
+          <End Role="Video" Type="Self.Video" Multiplicity="1" />
+          <End Role="UserVideoWatched" Type="Self.UserVideoWatched" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="AspNetRoles">
+            <Principal Role="Video">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="AspNetUserRoles">
-              <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserRoles">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserInformation_AspNetUsers">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
-          <End Role="UserInformation" Type="Self.UserInformation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UserInformation">
-              <PropertyRef Name="UserId" />
+            <Dependent Role="UserVideoWatched">
+              <PropertyRef Name="VideoId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -225,37 +199,44 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetHotVideos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="DateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="NumberOfVideos" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="SimplerNewsDbModelStoreContainer">
-          <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserInformation" EntityType="Self.UserInformation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FacebookCategory" EntityType="Self.FacebookCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FacebookYoutubeMapping" EntityType="Self.FacebookYoutubeMapping" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserPreferences" EntityType="Self.UserPreferences" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserVideoWatched" EntityType="Self.UserVideoWatched" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Video" EntityType="Self.Video" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="VideoCategory" EntityType="Self.VideoCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="VideoTag" EntityType="Self.VideoTag" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="YoutubeChannel" EntityType="Self.YoutubeChannel" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          <AssociationSet Name="FK_FacebookYoutubeMapping_FacebookCategory" Association="Self.FK_FacebookYoutubeMapping_FacebookCategory">
+            <End Role="FacebookCategory" EntitySet="FacebookCategory" />
+            <End Role="FacebookYoutubeMapping" EntitySet="FacebookYoutubeMapping" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          <AssociationSet Name="FK_FacebookYoutubeMapping_VideoCategory" Association="Self.FK_FacebookYoutubeMapping_VideoCategory">
+            <End Role="VideoCategory" EntitySet="VideoCategory" />
+            <End Role="FacebookYoutubeMapping" EntitySet="FacebookYoutubeMapping" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
-            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
-            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          <AssociationSet Name="FK_UserPreferences_User" Association="Self.FK_UserPreferences_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserPreferences" EntitySet="UserPreferences" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          <AssociationSet Name="FK_UserPreferences_VideoCategory" Association="Self.FK_UserPreferences_VideoCategory">
+            <End Role="VideoCategory" EntitySet="VideoCategory" />
+            <End Role="UserPreferences" EntitySet="UserPreferences" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserInformation_AspNetUsers" Association="Self.FK_UserInformation_AspNetUsers">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="UserInformation" EntitySet="UserInformation" />
+          <AssociationSet Name="FK_UserVideoWatched_User" Association="Self.FK_UserVideoWatched_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserVideoWatched" EntitySet="UserVideoWatched" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserVideoWatched_Video" Association="Self.FK_UserVideoWatched_Video">
+            <End Role="Video" EntitySet="Video" />
+            <End Role="UserVideoWatched" EntitySet="UserVideoWatched" />
           </AssociationSet>
           <AssociationSet Name="FK_Video_VideoCategory" Association="Self.FK_Video_VideoCategory">
             <End Role="VideoCategory" EntitySet="VideoCategory" />
@@ -275,27 +256,38 @@
     <edmx:ConceptualModels>
       <Schema Namespace="SimplerNewsDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="SimplerNewsSQLDb" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="C__MigrationHistory" EntityType="SimplerNewsDbModel.C__MigrationHistory" />
-          <EntitySet Name="AspNetRoles" EntityType="SimplerNewsDbModel.AspNetRoles" />
-          <EntitySet Name="AspNetUserClaims" EntityType="SimplerNewsDbModel.AspNetUserClaims" />
-          <EntitySet Name="AspNetUserLogins" EntityType="SimplerNewsDbModel.AspNetUserLogins" />
-          <EntitySet Name="AspNetUsers" EntityType="SimplerNewsDbModel.AspNetUsers" />
-          <EntitySet Name="UserInformation" EntityType="SimplerNewsDbModel.UserInformation" />
+          <EntitySet Name="FacebookCategory" EntityType="SimplerNewsDbModel.FacebookCategory" />
+          <EntitySet Name="FacebookYoutubeMapping" EntityType="SimplerNewsDbModel.FacebookYoutubeMapping" />
+          <EntitySet Name="User" EntityType="SimplerNewsDbModel.User" />
+          <EntitySet Name="UserPreferences" EntityType="SimplerNewsDbModel.UserPreferences" />
+          <EntitySet Name="UserVideoWatched" EntityType="SimplerNewsDbModel.UserVideoWatched" />
           <EntitySet Name="Video" EntityType="SimplerNewsDbModel.Video" />
           <EntitySet Name="VideoCategory" EntityType="SimplerNewsDbModel.VideoCategory" />
           <EntitySet Name="VideoTag" EntityType="SimplerNewsDbModel.VideoTag" />
           <EntitySet Name="YoutubeChannel" EntityType="SimplerNewsDbModel.YoutubeChannel" />
-          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="SimplerNewsDbModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          <AssociationSet Name="FK_FacebookYoutubeMapping_FacebookCategory" Association="SimplerNewsDbModel.FK_FacebookYoutubeMapping_FacebookCategory">
+            <End Role="FacebookCategory" EntitySet="FacebookCategory" />
+            <End Role="FacebookYoutubeMapping" EntitySet="FacebookYoutubeMapping" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="SimplerNewsDbModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          <AssociationSet Name="FK_FacebookYoutubeMapping_VideoCategory" Association="SimplerNewsDbModel.FK_FacebookYoutubeMapping_VideoCategory">
+            <End Role="VideoCategory" EntitySet="VideoCategory" />
+            <End Role="FacebookYoutubeMapping" EntitySet="FacebookYoutubeMapping" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserInformation_AspNetUsers" Association="SimplerNewsDbModel.FK_UserInformation_AspNetUsers">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="UserInformation" EntitySet="UserInformation" />
+          <AssociationSet Name="FK_UserPreferences_User" Association="SimplerNewsDbModel.FK_UserPreferences_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserPreferences" EntitySet="UserPreferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserVideoWatched_User" Association="SimplerNewsDbModel.FK_UserVideoWatched_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserVideoWatched" EntitySet="UserVideoWatched" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPreferences_VideoCategory" Association="SimplerNewsDbModel.FK_UserPreferences_VideoCategory">
+            <End Role="VideoCategory" EntitySet="VideoCategory" />
+            <End Role="UserPreferences" EntitySet="UserPreferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserVideoWatched_Video" Association="SimplerNewsDbModel.FK_UserVideoWatched_Video">
+            <End Role="Video" EntitySet="Video" />
+            <End Role="UserVideoWatched" EntitySet="UserVideoWatched" />
           </AssociationSet>
           <AssociationSet Name="FK_Video_VideoCategory" Association="SimplerNewsDbModel.FK_Video_VideoCategory">
             <End Role="VideoCategory" EntitySet="VideoCategory" />
@@ -309,81 +301,61 @@
             <End Role="Video" EntitySet="Video" />
             <End Role="VideoTag" EntitySet="VideoTag" />
           </AssociationSet>
-          <AssociationSet Name="AspNetUserRoles" Association="SimplerNewsDbModel.AspNetUserRoles">
-            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-          </AssociationSet>
+          <FunctionImport Name="GetHotVideos" ReturnType="Collection(SimplerNewsDbModel.GetHotVideos_Result)">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NumberOfVideos" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
-        <EntityType Name="C__MigrationHistory">
-          <Key>
-            <PropertyRef Name="MigrationId" />
-            <PropertyRef Name="ContextKey" />
-          </Key>
-          <Property Name="MigrationId" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="ContextKey" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Model" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <Property Name="ProductVersion" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="AspNetRoles">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUsers" Relationship="SimplerNewsDbModel.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
-        </EntityType>
-        <EntityType Name="AspNetUserClaims">
+        <EntityType Name="FacebookCategory">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUsers" Relationship="SimplerNewsDbModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FacebookYoutubeMapping" Relationship="SimplerNewsDbModel.FK_FacebookYoutubeMapping_FacebookCategory" FromRole="FacebookCategory" ToRole="FacebookYoutubeMapping" />
         </EntityType>
-        <EntityType Name="AspNetUserLogins">
-          <Key>
-            <PropertyRef Name="LoginProvider" />
-            <PropertyRef Name="ProviderKey" />
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUsers" Relationship="SimplerNewsDbModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
-        </EntityType>
-        <EntityType Name="AspNetUsers">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
-          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUserClaims" Relationship="SimplerNewsDbModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
-          <NavigationProperty Name="AspNetUserLogins" Relationship="SimplerNewsDbModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
-          <NavigationProperty Name="UserInformation" Relationship="SimplerNewsDbModel.FK_UserInformation_AspNetUsers" FromRole="AspNetUsers" ToRole="UserInformation" />
-          <NavigationProperty Name="AspNetRoles" Relationship="SimplerNewsDbModel.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
-        </EntityType>
-        <EntityType Name="UserInformation">
+        <EntityType Name="FacebookYoutubeMapping">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Location" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUsers" Relationship="SimplerNewsDbModel.FK_UserInformation_AspNetUsers" FromRole="UserInformation" ToRole="AspNetUsers" />
+          <Property Name="FacebookCategoryId" Type="Int32" Nullable="false" />
+          <Property Name="VideoCategoryId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FacebookCategory" Relationship="SimplerNewsDbModel.FK_FacebookYoutubeMapping_FacebookCategory" FromRole="FacebookYoutubeMapping" ToRole="FacebookCategory" />
+          <NavigationProperty Name="VideoCategory" Relationship="SimplerNewsDbModel.FK_FacebookYoutubeMapping_VideoCategory" FromRole="FacebookYoutubeMapping" ToRole="VideoCategory" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Token" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserPreferences" Relationship="SimplerNewsDbModel.FK_UserPreferences_User" FromRole="User" ToRole="UserPreferences" />
+          <NavigationProperty Name="UserVideoWatched" Relationship="SimplerNewsDbModel.FK_UserVideoWatched_User" FromRole="User" ToRole="UserVideoWatched" />
+        </EntityType>
+        <EntityType Name="UserPreferences">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="YoutubeCategoryId" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Decimal" Nullable="false" Precision="10" Scale="4" />
+          <NavigationProperty Name="User" Relationship="SimplerNewsDbModel.FK_UserPreferences_User" FromRole="UserPreferences" ToRole="User" />
+          <NavigationProperty Name="VideoCategory" Relationship="SimplerNewsDbModel.FK_UserPreferences_VideoCategory" FromRole="UserPreferences" ToRole="VideoCategory" />
+        </EntityType>
+        <EntityType Name="UserVideoWatched">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VideoId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="SimplerNewsDbModel.FK_UserVideoWatched_User" FromRole="UserVideoWatched" ToRole="User" />
+          <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_UserVideoWatched_Video" FromRole="UserVideoWatched" ToRole="Video" />
         </EntityType>
         <EntityType Name="Video">
           <Key>
@@ -403,6 +375,7 @@
           <Property Name="NumberOfDislikes" Type="Int32" />
           <Property Name="NumberOfComments" Type="Int32" />
           <Property Name="VideoCategoryId" Type="Int32" />
+          <NavigationProperty Name="UserVideoWatched" Relationship="SimplerNewsDbModel.FK_UserVideoWatched_Video" FromRole="Video" ToRole="UserVideoWatched" />
           <NavigationProperty Name="VideoCategory" Relationship="SimplerNewsDbModel.FK_Video_VideoCategory" FromRole="Video" ToRole="VideoCategory" />
           <NavigationProperty Name="YoutubeChannel" Relationship="SimplerNewsDbModel.FK_Video_YoutubeChannel" FromRole="Video" ToRole="YoutubeChannel" />
           <NavigationProperty Name="VideoTag" Relationship="SimplerNewsDbModel.FK_VideoTags_Video" FromRole="Video" ToRole="VideoTag" />
@@ -414,6 +387,8 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="VideoCategoryName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="YoutbeVideoCategoryId" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FacebookYoutubeMapping" Relationship="SimplerNewsDbModel.FK_FacebookYoutubeMapping_VideoCategory" FromRole="VideoCategory" ToRole="FacebookYoutubeMapping" />
+          <NavigationProperty Name="UserPreferences" Relationship="SimplerNewsDbModel.FK_UserPreferences_VideoCategory" FromRole="VideoCategory" ToRole="UserPreferences" />
           <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_Video_VideoCategory" FromRole="VideoCategory" ToRole="Video" />
         </EntityType>
         <EntityType Name="VideoTag">
@@ -436,43 +411,75 @@
           <Property Name="UploadPlaylistId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_Video_YoutubeChannel" FromRole="YoutubeChannel" ToRole="Video" />
         </EntityType>
-        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-          <End Type="SimplerNewsDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SimplerNewsDbModel.AspNetUserClaims" Role="AspNetUserClaims" Multiplicity="*" />
+        <Association Name="FK_FacebookYoutubeMapping_FacebookCategory">
+          <End Type="SimplerNewsDbModel.FacebookCategory" Role="FacebookCategory" Multiplicity="1" />
+          <End Type="SimplerNewsDbModel.FacebookYoutubeMapping" Role="FacebookYoutubeMapping" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
+            <Principal Role="FacebookCategory">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="AspNetUserClaims">
+            <Dependent Role="FacebookYoutubeMapping">
+              <PropertyRef Name="FacebookCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FacebookYoutubeMapping_VideoCategory">
+          <End Type="SimplerNewsDbModel.VideoCategory" Role="VideoCategory" Multiplicity="1" />
+          <End Type="SimplerNewsDbModel.FacebookYoutubeMapping" Role="FacebookYoutubeMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VideoCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FacebookYoutubeMapping">
+              <PropertyRef Name="VideoCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPreferences_User">
+          <End Type="SimplerNewsDbModel.User" Role="User" Multiplicity="1" />
+          <End Type="SimplerNewsDbModel.UserPreferences" Role="UserPreferences" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserPreferences">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
-          <End Type="SimplerNewsDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SimplerNewsDbModel.AspNetUserLogins" Role="AspNetUserLogins" Multiplicity="*" />
+        <Association Name="FK_UserVideoWatched_User">
+          <End Type="SimplerNewsDbModel.User" Role="User" Multiplicity="1" />
+          <End Type="SimplerNewsDbModel.UserVideoWatched" Role="UserVideoWatched" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
+            <Principal Role="User">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="AspNetUserLogins">
+            <Dependent Role="UserVideoWatched">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserInformation_AspNetUsers">
-          <End Type="SimplerNewsDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
-          <End Type="SimplerNewsDbModel.UserInformation" Role="UserInformation" Multiplicity="*" />
+        <Association Name="FK_UserPreferences_VideoCategory">
+          <End Type="SimplerNewsDbModel.VideoCategory" Role="VideoCategory" Multiplicity="1" />
+          <End Type="SimplerNewsDbModel.UserPreferences" Role="UserPreferences" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
+            <Principal Role="VideoCategory">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="UserInformation">
-              <PropertyRef Name="UserId" />
+            <Dependent Role="UserPreferences">
+              <PropertyRef Name="YoutubeCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserVideoWatched_Video">
+          <End Type="SimplerNewsDbModel.Video" Role="Video" Multiplicity="1" />
+          <End Type="SimplerNewsDbModel.UserVideoWatched" Role="UserVideoWatched" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Video">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserVideoWatched">
+              <PropertyRef Name="VideoId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -512,78 +519,70 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="AspNetUserRoles">
-          <End Type="SimplerNewsDbModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
-          <End Type="SimplerNewsDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
-        </Association>
+        <ComplexType Name="GetHotVideos_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Etag" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Kind" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="YoutubeId" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="Description" Nullable="true" />
+          <Property Type="Int32" Name="YoutubeChannelId" Nullable="false" />
+          <Property Type="DateTime" Name="PublishedAt" Nullable="false" Precision="23" />
+          <Property Type="String" Name="YoutubeLink" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="NumberOfViews" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfLikes" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfDislikes" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfComments" Nullable="true" />
+          <Property Type="Int32" Name="VideoCategoryId" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="SimplerNewsDbModelStoreContainer" CdmEntityContainer="SimplerNewsSQLDb">
-          <EntitySetMapping Name="C__MigrationHistory">
-            <EntityTypeMapping TypeName="SimplerNewsDbModel.C__MigrationHistory">
-              <MappingFragment StoreEntitySet="__MigrationHistory">
-                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
-                <ScalarProperty Name="Model" ColumnName="Model" />
-                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
-                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetRoles">
-            <EntityTypeMapping TypeName="SimplerNewsDbModel.AspNetRoles">
-              <MappingFragment StoreEntitySet="AspNetRoles">
-                <ScalarProperty Name="Name" ColumnName="Name" />
+          <EntitySetMapping Name="FacebookCategory">
+            <EntityTypeMapping TypeName="SimplerNewsDbModel.FacebookCategory">
+              <MappingFragment StoreEntitySet="FacebookCategory">
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserClaims">
-            <EntityTypeMapping TypeName="SimplerNewsDbModel.AspNetUserClaims">
-              <MappingFragment StoreEntitySet="AspNetUserClaims">
-                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
-                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <EntitySetMapping Name="FacebookYoutubeMapping">
+            <EntityTypeMapping TypeName="SimplerNewsDbModel.FacebookYoutubeMapping">
+              <MappingFragment StoreEntitySet="FacebookYoutubeMapping">
+                <ScalarProperty Name="VideoCategoryId" ColumnName="VideoCategoryId" />
+                <ScalarProperty Name="FacebookCategoryId" ColumnName="FacebookCategoryId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserLogins">
-            <EntityTypeMapping TypeName="SimplerNewsDbModel.AspNetUserLogins">
-              <MappingFragment StoreEntitySet="AspNetUserLogins">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
-                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUsers">
-            <EntityTypeMapping TypeName="SimplerNewsDbModel.AspNetUsers">
-              <MappingFragment StoreEntitySet="AspNetUsers">
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
-                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
-                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
-                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
-                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
-                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
-                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="SimplerNewsDbModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="UserInformation">
-            <EntityTypeMapping TypeName="SimplerNewsDbModel.UserInformation">
-              <MappingFragment StoreEntitySet="UserInformation">
+          <EntitySetMapping Name="UserPreferences">
+            <EntityTypeMapping TypeName="SimplerNewsDbModel.UserPreferences">
+              <MappingFragment StoreEntitySet="UserPreferences">
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="YoutubeCategoryId" ColumnName="YoutubeCategoryId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Location" ColumnName="Location" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserVideoWatched">
+            <EntityTypeMapping TypeName="SimplerNewsDbModel.UserVideoWatched">
+              <MappingFragment StoreEntitySet="UserVideoWatched">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="VideoId" ColumnName="VideoId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -637,14 +636,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="AspNetUserRoles" TypeName="SimplerNewsDbModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
-            <EndProperty Name="AspNetUsers">
-              <ScalarProperty Name="Id" ColumnName="UserId" />
-            </EndProperty>
-            <EndProperty Name="AspNetRoles">
-              <ScalarProperty Name="Id" ColumnName="RoleId" />
-            </EndProperty>
-          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="GetHotVideos" FunctionName="SimplerNewsDbModel.Store.GetHotVideos">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SimplerNewsDbModel.GetHotVideos_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Etag" ColumnName="Etag" />
+                <ScalarProperty Name="Kind" ColumnName="Kind" />
+                <ScalarProperty Name="YoutubeId" ColumnName="YoutubeId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="YoutubeChannelId" ColumnName="YoutubeChannelId" />
+                <ScalarProperty Name="PublishedAt" ColumnName="PublishedAt" />
+                <ScalarProperty Name="YoutubeLink" ColumnName="YoutubeLink" />
+                <ScalarProperty Name="NumberOfViews" ColumnName="NumberOfViews" />
+                <ScalarProperty Name="NumberOfLikes" ColumnName="NumberOfLikes" />
+                <ScalarProperty Name="NumberOfDislikes" ColumnName="NumberOfDislikes" />
+                <ScalarProperty Name="NumberOfComments" ColumnName="NumberOfComments" />
+                <ScalarProperty Name="VideoCategoryId" ColumnName="VideoCategoryId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

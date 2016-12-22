@@ -77,6 +77,8 @@
   <ItemGroup>
     <Compile Include="APIModels\VideoAPIModel.cs" />
     <Compile Include="APIModels\VideoFromService.cs" />
+    <Compile Include="BusinessModels\UserDto.cs" />
+    <Compile Include="BusinessModels\UserInformationDto.cs" />
     <Compile Include="BusinessModels\VideoCategoryDto.cs" />
     <Compile Include="BusinessModels\VideoDto.cs" />
     <Compile Include="BusinessModels\VideoTagDto.cs" />
