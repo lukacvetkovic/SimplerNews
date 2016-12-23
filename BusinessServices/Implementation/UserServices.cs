@@ -57,7 +57,10 @@ namespace BusinessServices.Implementation
                                 p => p.YoutubeCategoryId == facebookLikeCategory.VideoCategoryId && p.UserId == user.Id);
                         if (pref != null)
                         {
-                            pref.Score++;
+                            double additionalScore = (1.0 / (DateTime.Now.Year - DateTime.Parse(like.liked_date).Year + 1));
+                            // ReSharper disable once PossibleLossOfFraction
+                            decimal addition = Convert.ToDecimal(additionalScore);
+                            pref.Score += addition;
                             _unitOfWork.UserPreferencesRepository.Update(pref);
                             _unitOfWork.Save();
                         }

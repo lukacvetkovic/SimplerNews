@@ -78,7 +78,6 @@
     <Build Include="dbo\Tables\UserVideoWatched.sql" />
     <Build Include="dbo\Tables\UserPreferences.sql" />
     <Build Include="dbo\Tables\User.sql" />
-    <Build Include="dbo\Tables\FacebookYoutubeMapping.sql" />
     <Build Include="dbo\Tables\FacebookCategory.sql" />
     <Build Include="dbo\Stored Procedures\GetHotVideos.sql" />
     <Build Include="dbo\Stored Procedures\ResetUserPreferences.sql" />
