@@ -17,7 +17,7 @@ namespace DataModel.SQLDatabase
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public VideoCategory()
         {
-            this.FacebookYoutubeMapping = new HashSet<FacebookYoutubeMapping>();
+            this.FacebookCategory = new HashSet<FacebookCategory>();
             this.UserPreferences = new HashSet<UserPreferences>();
             this.Video = new HashSet<Video>();
         }
@@ -27,7 +27,7 @@ namespace DataModel.SQLDatabase
         public string YoutbeVideoCategoryId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FacebookYoutubeMapping> FacebookYoutubeMapping { get; set; }
+        public virtual ICollection<FacebookCategory> FacebookCategory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserPreferences> UserPreferences { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

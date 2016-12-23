@@ -14,16 +14,10 @@ namespace DataModel.SQLDatabase
     
     public partial class FacebookCategory
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public FacebookCategory()
-        {
-            this.FacebookYoutubeMapping = new HashSet<FacebookYoutubeMapping>();
-        }
-    
         public int Id { get; set; }
         public string CategoryName { get; set; }
+        public Nullable<int> VideoCategoryId { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FacebookYoutubeMapping> FacebookYoutubeMapping { get; set; }
+        public virtual VideoCategory VideoCategory { get; set; }
     }
 }

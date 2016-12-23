@@ -19,18 +19,18 @@ namespace BusinessServices.Implementation
         {
             _unitOfWork = new UnitOfWork();
         }
-        public bool InsertOrUpdateUser(UserDto userDto)
+        public bool InsertOrUpdateUser(UserInformationDto userInformation)
         {
-            var user = _unitOfWork.UserRepository.GetSingle(p => p.Email == userDto.Email);
+            var user = _unitOfWork.UserRepository.GetSingle(p => p.Email == userInformation.email);
             if (user != null)
             {
-                user.Gender = userDto.Gender;
-                user.Token = userDto.Token;
+                user.ExternalId = userInformation.id;
+                user.Token = userInformation.accessToken;
                 _unitOfWork.UserRepository.Update(user);
             }
             else
             {
-                _unitOfWork.UserRepository.Insert(new User() {Id = -1,Email = userDto.Email,Gender = userDto.Gender,Token = userDto.Token});
+                _unitOfWork.UserRepository.Insert(new User() { Id = -1, Email = userInformation.email, ExternalId = userInformation.id, Token = userInformation.accessToken });
             }
 
             _unitOfWork.Save();
@@ -40,7 +40,32 @@ namespace BusinessServices.Implementation
 
         public bool UpdateUserPreferences(UserInformationDto userInformation)
         {
-            throw new NotImplementedException();
+            var user = _unitOfWork.UserRepository.GetSingle(p => p.Email == userInformation.email);
+            if (userInformation.facebookJSON?.likes != null)
+            {
+                SimplerNewsSQLDb db = new SimplerNewsSQLDb();
+                db.ResetUserPreferences(user.Id);
+
+                foreach (var like in userInformation.facebookJSON.likes)
+                {
+                    var facebookLikeCategory =
+                        _unitOfWork.FacebookCategoryRepository.GetSingle(p => p.CategoryName == like.category);
+                    if (facebookLikeCategory != null)
+                    {
+                        var pref =
+                            _unitOfWork.UserPreferencesRepository.GetSingle(
+                                p => p.YoutubeCategoryId == facebookLikeCategory.VideoCategoryId && p.UserId == user.Id);
+                        if (pref != null)
+                        {
+                            pref.Score++;
+                            _unitOfWork.UserPreferencesRepository.Update(pref);
+                            _unitOfWork.Save();
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

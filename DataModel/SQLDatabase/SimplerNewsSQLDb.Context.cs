@@ -28,7 +28,6 @@ namespace DataModel.SQLDatabase
         }
     
         public virtual DbSet<FacebookCategory> FacebookCategory { get; set; }
-        public virtual DbSet<FacebookYoutubeMapping> FacebookYoutubeMapping { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserPreferences> UserPreferences { get; set; }
         public virtual DbSet<UserVideoWatched> UserVideoWatched { get; set; }
@@ -52,6 +51,15 @@ namespace DataModel.SQLDatabase
                 new ObjectParameter("NumberOfVideos", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetHotVideos_Result>("GetHotVideos", userIdParameter, dateFromParameter, numberOfVideosParameter);
+        }
+    
+        public virtual int ResetUserPreferences(Nullable<int> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ResetUserPreferences", userIdParameter);
         }
     }
 }

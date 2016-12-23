@@ -23,9 +23,9 @@ namespace SimplerNews.API.Controllers
 
         [HttpPost]
         [Route("api/User/Login")]
-        public bool Login(UserDto user)
+        public bool Login(UserInformationDto userInfo)
         {
-            return _userServices.InsertOrUpdateUser(user);
+            return _userServices.InsertOrUpdateUser(userInfo);
         }
 
         [HttpPost]

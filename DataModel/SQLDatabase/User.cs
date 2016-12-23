@@ -24,7 +24,7 @@ namespace DataModel.SQLDatabase
         public int Id { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
-        public string Gender { get; set; }
+        public string ExternalId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserPreferences> UserPreferences { get; set; }

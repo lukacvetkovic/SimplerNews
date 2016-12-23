@@ -11,14 +11,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CategoryName" Type="nvarchar" MaxLength="150" Nullable="false" />
-        </EntityType>
-        <EntityType Name="FacebookYoutubeMapping">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FacebookCategoryId" Type="int" Nullable="false" />
-          <Property Name="VideoCategoryId" Type="int" Nullable="false" />
+          <Property Name="VideoCategoryId" Type="int" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -27,7 +20,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="Token" Type="nvarchar" MaxLength="150" Nullable="false" />
-          <Property Name="Gender" Type="nvarchar" MaxLength="50" />
+          <Property Name="ExternalId" Type="nvarchar" MaxLength="150" Nullable="false" />
         </EntityType>
         <EntityType Name="UserPreferences">
           <Key>
@@ -91,26 +84,14 @@
           <Property Name="YoutubeChannelId" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="UploadPlaylistId" Type="nvarchar" MaxLength="150" />
         </EntityType>
-        <Association Name="FK_FacebookYoutubeMapping_FacebookCategory">
-          <End Role="FacebookCategory" Type="Self.FacebookCategory" Multiplicity="1" />
-          <End Role="FacebookYoutubeMapping" Type="Self.FacebookYoutubeMapping" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="FacebookCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="FacebookYoutubeMapping">
-              <PropertyRef Name="FacebookCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FacebookYoutubeMapping_VideoCategory">
-          <End Role="VideoCategory" Type="Self.VideoCategory" Multiplicity="1" />
-          <End Role="FacebookYoutubeMapping" Type="Self.FacebookYoutubeMapping" Multiplicity="*" />
+        <Association Name="FK_FacebookCategory_VideoCategory">
+          <End Role="VideoCategory" Type="Self.VideoCategory" Multiplicity="0..1" />
+          <End Role="FacebookCategory" Type="Self.FacebookCategory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="VideoCategory">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="FacebookYoutubeMapping">
+            <Dependent Role="FacebookCategory">
               <PropertyRef Name="VideoCategoryId" />
             </Dependent>
           </ReferentialConstraint>
@@ -204,9 +185,11 @@
           <Parameter Name="DateFrom" Type="datetime" Mode="In" />
           <Parameter Name="NumberOfVideos" Type="int" Mode="In" />
         </Function>
+        <Function Name="ResetUserPreferences" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="SimplerNewsDbModelStoreContainer">
           <EntitySet Name="FacebookCategory" EntityType="Self.FacebookCategory" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FacebookYoutubeMapping" EntityType="Self.FacebookYoutubeMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserPreferences" EntityType="Self.UserPreferences" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserVideoWatched" EntityType="Self.UserVideoWatched" Schema="dbo" store:Type="Tables" />
@@ -214,13 +197,9 @@
           <EntitySet Name="VideoCategory" EntityType="Self.VideoCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="VideoTag" EntityType="Self.VideoTag" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="YoutubeChannel" EntityType="Self.YoutubeChannel" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_FacebookYoutubeMapping_FacebookCategory" Association="Self.FK_FacebookYoutubeMapping_FacebookCategory">
-            <End Role="FacebookCategory" EntitySet="FacebookCategory" />
-            <End Role="FacebookYoutubeMapping" EntitySet="FacebookYoutubeMapping" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FacebookYoutubeMapping_VideoCategory" Association="Self.FK_FacebookYoutubeMapping_VideoCategory">
+          <AssociationSet Name="FK_FacebookCategory_VideoCategory" Association="Self.FK_FacebookCategory_VideoCategory">
             <End Role="VideoCategory" EntitySet="VideoCategory" />
-            <End Role="FacebookYoutubeMapping" EntitySet="FacebookYoutubeMapping" />
+            <End Role="FacebookCategory" EntitySet="FacebookCategory" />
           </AssociationSet>
           <AssociationSet Name="FK_UserPreferences_User" Association="Self.FK_UserPreferences_User">
             <End Role="User" EntitySet="User" />
@@ -256,8 +235,15 @@
     <edmx:ConceptualModels>
       <Schema Namespace="SimplerNewsDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="SimplerNewsSQLDb" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="GetHotVideos" ReturnType="Collection(SimplerNewsDbModel.GetHotVideos_Result)">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NumberOfVideos" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ResetUserPreferences">
+          <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
           <EntitySet Name="FacebookCategory" EntityType="SimplerNewsDbModel.FacebookCategory" />
-          <EntitySet Name="FacebookYoutubeMapping" EntityType="SimplerNewsDbModel.FacebookYoutubeMapping" />
           <EntitySet Name="User" EntityType="SimplerNewsDbModel.User" />
           <EntitySet Name="UserPreferences" EntityType="SimplerNewsDbModel.UserPreferences" />
           <EntitySet Name="UserVideoWatched" EntityType="SimplerNewsDbModel.UserVideoWatched" />
@@ -265,13 +251,9 @@
           <EntitySet Name="VideoCategory" EntityType="SimplerNewsDbModel.VideoCategory" />
           <EntitySet Name="VideoTag" EntityType="SimplerNewsDbModel.VideoTag" />
           <EntitySet Name="YoutubeChannel" EntityType="SimplerNewsDbModel.YoutubeChannel" />
-          <AssociationSet Name="FK_FacebookYoutubeMapping_FacebookCategory" Association="SimplerNewsDbModel.FK_FacebookYoutubeMapping_FacebookCategory">
-            <End Role="FacebookCategory" EntitySet="FacebookCategory" />
-            <End Role="FacebookYoutubeMapping" EntitySet="FacebookYoutubeMapping" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FacebookYoutubeMapping_VideoCategory" Association="SimplerNewsDbModel.FK_FacebookYoutubeMapping_VideoCategory">
+          <AssociationSet Name="FK_FacebookCategory_VideoCategory" Association="SimplerNewsDbModel.FK_FacebookCategory_VideoCategory">
             <End Role="VideoCategory" EntitySet="VideoCategory" />
-            <End Role="FacebookYoutubeMapping" EntitySet="FacebookYoutubeMapping" />
+            <End Role="FacebookCategory" EntitySet="FacebookCategory" />
           </AssociationSet>
           <AssociationSet Name="FK_UserPreferences_User" Association="SimplerNewsDbModel.FK_UserPreferences_User">
             <End Role="User" EntitySet="User" />
@@ -301,29 +283,31 @@
             <End Role="Video" EntitySet="Video" />
             <End Role="VideoTag" EntitySet="VideoTag" />
           </AssociationSet>
-          <FunctionImport Name="GetHotVideos" ReturnType="Collection(SimplerNewsDbModel.GetHotVideos_Result)">
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
-            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
-            <Parameter Name="NumberOfVideos" Mode="In" Type="Int32" />
-          </FunctionImport>
-        </EntityContainer>
+          </EntityContainer>
+        <ComplexType Name="GetHotVideos_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Etag" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Kind" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="YoutubeId" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="Description" Nullable="true" />
+          <Property Type="Int32" Name="YoutubeChannelId" Nullable="false" />
+          <Property Type="DateTime" Name="PublishedAt" Nullable="false" Precision="23" />
+          <Property Type="String" Name="YoutubeLink" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="NumberOfViews" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfLikes" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfDislikes" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfComments" Nullable="true" />
+          <Property Type="Int32" Name="VideoCategoryId" Nullable="true" />
+        </ComplexType>
         <EntityType Name="FacebookCategory">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="FacebookYoutubeMapping" Relationship="SimplerNewsDbModel.FK_FacebookYoutubeMapping_FacebookCategory" FromRole="FacebookCategory" ToRole="FacebookYoutubeMapping" />
-        </EntityType>
-        <EntityType Name="FacebookYoutubeMapping">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FacebookCategoryId" Type="Int32" Nullable="false" />
-          <Property Name="VideoCategoryId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="FacebookCategory" Relationship="SimplerNewsDbModel.FK_FacebookYoutubeMapping_FacebookCategory" FromRole="FacebookYoutubeMapping" ToRole="FacebookCategory" />
-          <NavigationProperty Name="VideoCategory" Relationship="SimplerNewsDbModel.FK_FacebookYoutubeMapping_VideoCategory" FromRole="FacebookYoutubeMapping" ToRole="VideoCategory" />
+          <Property Name="VideoCategoryId" Type="Int32" />
+          <NavigationProperty Name="VideoCategory" Relationship="SimplerNewsDbModel.FK_FacebookCategory_VideoCategory" FromRole="FacebookCategory" ToRole="VideoCategory" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -332,7 +316,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="Token" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ExternalId" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="UserPreferences" Relationship="SimplerNewsDbModel.FK_UserPreferences_User" FromRole="User" ToRole="UserPreferences" />
           <NavigationProperty Name="UserVideoWatched" Relationship="SimplerNewsDbModel.FK_UserVideoWatched_User" FromRole="User" ToRole="UserVideoWatched" />
         </EntityType>
@@ -387,7 +371,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="VideoCategoryName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="YoutbeVideoCategoryId" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="FacebookYoutubeMapping" Relationship="SimplerNewsDbModel.FK_FacebookYoutubeMapping_VideoCategory" FromRole="VideoCategory" ToRole="FacebookYoutubeMapping" />
+          <NavigationProperty Name="FacebookCategory" Relationship="SimplerNewsDbModel.FK_FacebookCategory_VideoCategory" FromRole="VideoCategory" ToRole="FacebookCategory" />
           <NavigationProperty Name="UserPreferences" Relationship="SimplerNewsDbModel.FK_UserPreferences_VideoCategory" FromRole="VideoCategory" ToRole="UserPreferences" />
           <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_Video_VideoCategory" FromRole="VideoCategory" ToRole="Video" />
         </EntityType>
@@ -411,26 +395,14 @@
           <Property Name="UploadPlaylistId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Video" Relationship="SimplerNewsDbModel.FK_Video_YoutubeChannel" FromRole="YoutubeChannel" ToRole="Video" />
         </EntityType>
-        <Association Name="FK_FacebookYoutubeMapping_FacebookCategory">
-          <End Type="SimplerNewsDbModel.FacebookCategory" Role="FacebookCategory" Multiplicity="1" />
-          <End Type="SimplerNewsDbModel.FacebookYoutubeMapping" Role="FacebookYoutubeMapping" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="FacebookCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="FacebookYoutubeMapping">
-              <PropertyRef Name="FacebookCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FacebookYoutubeMapping_VideoCategory">
-          <End Type="SimplerNewsDbModel.VideoCategory" Role="VideoCategory" Multiplicity="1" />
-          <End Type="SimplerNewsDbModel.FacebookYoutubeMapping" Role="FacebookYoutubeMapping" Multiplicity="*" />
+        <Association Name="FK_FacebookCategory_VideoCategory">
+          <End Type="SimplerNewsDbModel.VideoCategory" Role="VideoCategory" Multiplicity="0..1" />
+          <End Type="SimplerNewsDbModel.FacebookCategory" Role="FacebookCategory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="VideoCategory">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="FacebookYoutubeMapping">
+            <Dependent Role="FacebookCategory">
               <PropertyRef Name="VideoCategoryId" />
             </Dependent>
           </ReferentialConstraint>
@@ -519,41 +491,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetHotVideos_Result">
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="String" Name="Etag" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="Kind" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="YoutubeId" Nullable="false" MaxLength="250" />
-          <Property Type="String" Name="Title" Nullable="true" MaxLength="1000" />
-          <Property Type="String" Name="Description" Nullable="true" />
-          <Property Type="Int32" Name="YoutubeChannelId" Nullable="false" />
-          <Property Type="DateTime" Name="PublishedAt" Nullable="false" Precision="23" />
-          <Property Type="String" Name="YoutubeLink" Nullable="true" MaxLength="250" />
-          <Property Type="Int32" Name="NumberOfViews" Nullable="true" />
-          <Property Type="Int32" Name="NumberOfLikes" Nullable="true" />
-          <Property Type="Int32" Name="NumberOfDislikes" Nullable="true" />
-          <Property Type="Int32" Name="NumberOfComments" Nullable="true" />
-          <Property Type="Int32" Name="VideoCategoryId" Nullable="true" />
-        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="SimplerNewsDbModelStoreContainer" CdmEntityContainer="SimplerNewsSQLDb">
+          <FunctionImportMapping FunctionImportName="GetHotVideos" FunctionName="SimplerNewsDbModel.Store.GetHotVideos">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SimplerNewsDbModel.GetHotVideos_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Etag" ColumnName="Etag" />
+                <ScalarProperty Name="Kind" ColumnName="Kind" />
+                <ScalarProperty Name="YoutubeId" ColumnName="YoutubeId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="YoutubeChannelId" ColumnName="YoutubeChannelId" />
+                <ScalarProperty Name="PublishedAt" ColumnName="PublishedAt" />
+                <ScalarProperty Name="YoutubeLink" ColumnName="YoutubeLink" />
+                <ScalarProperty Name="NumberOfViews" ColumnName="NumberOfViews" />
+                <ScalarProperty Name="NumberOfLikes" ColumnName="NumberOfLikes" />
+                <ScalarProperty Name="NumberOfDislikes" ColumnName="NumberOfDislikes" />
+                <ScalarProperty Name="NumberOfComments" ColumnName="NumberOfComments" />
+                <ScalarProperty Name="VideoCategoryId" ColumnName="VideoCategoryId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ResetUserPreferences" FunctionName="SimplerNewsDbModel.Store.ResetUserPreferences" />
           <EntitySetMapping Name="FacebookCategory">
             <EntityTypeMapping TypeName="SimplerNewsDbModel.FacebookCategory">
               <MappingFragment StoreEntitySet="FacebookCategory">
-                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="FacebookYoutubeMapping">
-            <EntityTypeMapping TypeName="SimplerNewsDbModel.FacebookYoutubeMapping">
-              <MappingFragment StoreEntitySet="FacebookYoutubeMapping">
                 <ScalarProperty Name="VideoCategoryId" ColumnName="VideoCategoryId" />
-                <ScalarProperty Name="FacebookCategoryId" ColumnName="FacebookCategoryId" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -561,7 +530,7 @@
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="SimplerNewsDbModel.User">
               <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
                 <ScalarProperty Name="Token" ColumnName="Token" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -636,27 +605,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetHotVideos" FunctionName="SimplerNewsDbModel.Store.GetHotVideos">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SimplerNewsDbModel.GetHotVideos_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Etag" ColumnName="Etag" />
-                <ScalarProperty Name="Kind" ColumnName="Kind" />
-                <ScalarProperty Name="YoutubeId" ColumnName="YoutubeId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="YoutubeChannelId" ColumnName="YoutubeChannelId" />
-                <ScalarProperty Name="PublishedAt" ColumnName="PublishedAt" />
-                <ScalarProperty Name="YoutubeLink" ColumnName="YoutubeLink" />
-                <ScalarProperty Name="NumberOfViews" ColumnName="NumberOfViews" />
-                <ScalarProperty Name="NumberOfLikes" ColumnName="NumberOfLikes" />
-                <ScalarProperty Name="NumberOfDislikes" ColumnName="NumberOfDislikes" />
-                <ScalarProperty Name="NumberOfComments" ColumnName="NumberOfComments" />
-                <ScalarProperty Name="VideoCategoryId" ColumnName="VideoCategoryId" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

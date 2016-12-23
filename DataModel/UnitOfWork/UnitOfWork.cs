@@ -23,6 +23,8 @@ namespace DataModel.UnitOfWork
         private IGenericRepository<Video> _videoRepository;
         private IGenericRepository<User> _userRepository;
         private IGenericRepository<UserVideoWatched> _userVideoWatchedRepository;
+        private IGenericRepository<FacebookCategory> _facebookCategoryRepository;
+        private IGenericRepository<UserPreferences> _userPreferencesRepository;
         #endregion
 
         public UnitOfWork()
@@ -39,6 +41,26 @@ namespace DataModel.UnitOfWork
                 if (this._youtubeChannelRepository == null)
                     this._youtubeChannelRepository = new GenericRepositorySQL<YoutubeChannel>(_context);
                 return _youtubeChannelRepository;
+            }
+        }
+
+        public IGenericRepository<UserPreferences> UserPreferencesRepository
+        {
+            get
+            {
+                if (this._userPreferencesRepository == null)
+                    this._userPreferencesRepository = new GenericRepositorySQL<UserPreferences>(_context);
+                return _userPreferencesRepository;
+            }
+        }
+
+        public IGenericRepository<FacebookCategory> FacebookCategoryRepository
+        {
+            get
+            {
+                if (this._facebookCategoryRepository == null)
+                    this._facebookCategoryRepository = new GenericRepositorySQL<FacebookCategory>(_context);
+                return _facebookCategoryRepository;
             }
         }
 

@@ -93,9 +93,6 @@
     <Compile Include="SQLDatabase\FacebookCategory.cs">
       <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="SQLDatabase\FacebookYoutubeMapping.cs">
-      <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
-    </Compile>
     <Compile Include="SQLDatabase\GetHotVideos_Result.cs">
       <DependentUpon>SimplerNewsSQLDb.tt</DependentUpon>
     </Compile>
