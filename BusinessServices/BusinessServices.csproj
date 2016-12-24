@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\JSONHelper.cs" />
+    <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Implementation\UserServices.cs" />
     <Compile Include="Interface\IUserServices.cs" />
     <Compile Include="Interface\IVideosService.cs" />

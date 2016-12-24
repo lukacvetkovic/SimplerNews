@@ -38,8 +38,7 @@ namespace SimplerNews.API.Controllers
         [Route("api/Video/PersonalizedVideos")]
         public List<VideoDto> GetPersonalizedVideos(int numberOfVideos, string token)
         {
-            var id = User.Identity.GetUserId();
-            return _videosService.GetPersonalizedVideos(id, numberOfVideos);
+            return _videosService.GetPersonalizedVideos(token, numberOfVideos);
         }
 
         //[HttpGet]

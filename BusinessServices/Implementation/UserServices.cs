@@ -30,10 +30,20 @@ namespace BusinessServices.Implementation
             }
             else
             {
-                _unitOfWork.UserRepository.Insert(new User() { Id = -1, Email = userInformation.email, ExternalId = userInformation.id, Token = userInformation.accessToken });
+                user = new User()
+                {
+                    Id = -1,
+                    Email = userInformation.email,
+                    ExternalId = userInformation.id,
+                    Token = userInformation.accessToken
+                };
+                _unitOfWork.UserRepository.Insert(user);
             }
 
             _unitOfWork.Save();
+
+            SimplerNewsSQLDb db = new SimplerNewsSQLDb();
+            db.ResetUserPreferences(user.Id);
 
             return true;
         }
@@ -41,6 +51,11 @@ namespace BusinessServices.Implementation
         public bool UpdateUserPreferences(UserInformationDto userInformation)
         {
             var user = _unitOfWork.UserRepository.GetSingle(p => p.Email == userInformation.email);
+            if (user == null)
+            {
+                InsertOrUpdateUser(userInformation);
+                user = _unitOfWork.UserRepository.GetSingle(p => p.Email == userInformation.email);
+            }
             if (userInformation.facebookJSON?.likes != null)
             {
                 SimplerNewsSQLDb db = new SimplerNewsSQLDb();
