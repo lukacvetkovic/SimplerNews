@@ -40,7 +40,7 @@ namespace BusinessServices.Implementation
             else
             {
                 videosFromDb = _unitOfWork.VideoRepository.GetMany(
-                     p => p.PublishedAt > DateTime.Now.AddDays(-5) && !user.UserVideoWatched.Select(x => x.Id).Contains(p.Id)).OrderByDescending(x => x.PublishedAt).Take(numberOfVideos).ToList();
+                     p => p.PublishedAt > DateTime.Now.AddDays(-5) && !user.UserVideoWatched.Select(x => x.Id).Contains(p.Id)).ToList().OrderByDescending(x => x.PublishedAt).Take(numberOfVideos).ToList();
 
             }
             if (videosFromDb.Any())
