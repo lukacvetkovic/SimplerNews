@@ -35,7 +35,9 @@ namespace BusinessServices.Implementation
             var user = _unitOfWork.UserRepository.GetSingle(p => p.Token == token);
             if (user == null)
             {
-                return videoList;
+                videosFromDb = _unitOfWork.VideoRepository.GetMany(
+                     p => p.PublishedAt > DateTime.Now.AddDays(-5)).ToList().OrderByDescending(x => x.PublishedAt).Take(numberOfVideos).ToList();
+
             }
             else
             {
@@ -75,20 +77,21 @@ namespace BusinessServices.Implementation
                     videoList.Add(videoDto);
                 }
             }
-
-            foreach (var videoDto in videoList)
+            if (user != null)
             {
-                _unitOfWork.UserVideoWatchedRepository.Insert(new UserVideoWatched()
+                foreach (var videoDto in videoList)
                 {
-                    Id = 0,
-                    UserId = user.Id,
-                    VideoId = videoDto.Id
-                });
+                    _unitOfWork.UserVideoWatchedRepository.Insert(new UserVideoWatched()
+                    {
+                        Id = 0,
+                        UserId = user.Id,
+                        VideoId = videoDto.Id
+                    });
+                }
+
+                _unitOfWork.Save();
+
             }
-
-            _unitOfWork.Save();
-
-
             return videoList.OrderByDescending(p => p.PublishedAt).ToList();
         }
 
