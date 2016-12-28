@@ -40,7 +40,7 @@ namespace BusinessServices.Implementation
             else
             {
                 videosFromDb = _unitOfWork.VideoRepository.GetMany(
-                     p => p.PublishedAt > DateTime.Now.AddDays(-5) && !user.UserVideoWatched.Select(x => x.Id).Contains(p.Id)).ToList().OrderByDescending(x => x.PublishedAt).Take(numberOfVideos).ToList();
+                     p => p.PublishedAt > DateTime.Now.AddDays(-5) && !user.UserVideoWatched.Select(x => x.VideoId).Contains(p.Id)).ToList().OrderByDescending(x => x.PublishedAt).Take(numberOfVideos).ToList();
 
             }
             if (videosFromDb.Any())
@@ -119,7 +119,7 @@ namespace BusinessServices.Implementation
                         var categoryId = userPreferences[i - 1].YoutubeCategoryId;
                         var video = _unitOfWork.VideoRepository.GetFirst(p => p.PublishedAt > DateTime.Now.AddDays(-5)
                                                                             && p.VideoCategoryId == categoryId
-                                                                            && !user.UserVideoWatched.Select(x => x.Id).Contains(p.Id));
+                                                                            && !user.UserVideoWatched.Select(x => x.VideoId).Contains(p.Id));
 
                         if (video != null)
                         {
