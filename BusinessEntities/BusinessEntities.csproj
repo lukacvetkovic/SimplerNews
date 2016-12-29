@@ -83,7 +83,10 @@
     <Compile Include="BusinessModels\VideoDto.cs" />
     <Compile Include="BusinessModels\VideoTagDto.cs" />
     <Compile Include="BusinessModels\YoutubeChannelDto.cs" />
+    <Compile Include="Maps\GeocodeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Weather\WeatherInformation.cs" />
+    <Compile Include="Weather\YahooResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Enums\" />

@@ -92,9 +92,13 @@
   <ItemGroup>
     <Compile Include="Helpers\JSONHelper.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
+    <Compile Include="Helpers\ReverseGeoLookup.cs" />
+    <Compile Include="Helpers\WeatherHelper.cs" />
     <Compile Include="Implementation\UserServices.cs" />
+    <Compile Include="Implementation\WeatherServices.cs" />
     <Compile Include="Interface\IUserServices.cs" />
     <Compile Include="Interface\IVideosService.cs" />
+    <Compile Include="Interface\IWeatherServices.cs" />
     <Compile Include="Interface\IYoutubeChannelsService.cs" />
     <Compile Include="Implementation\VideosService.cs" />
     <Compile Include="Implementation\YoutubeChannelsService.cs" />

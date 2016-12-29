@@ -9,7 +9,7 @@ namespace BusinessServices.Interface
 {
     public interface IUserServices
     {
-        bool InsertOrUpdateUser(UserInformationDto userInformation);
+        //bool InsertOrUpdateUser(UserInformationDto userInformation);
 
         bool UpdateUserPreferences(UserInformationDto userInformation);
     }

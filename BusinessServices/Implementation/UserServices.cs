@@ -19,7 +19,7 @@ namespace BusinessServices.Implementation
         {
             _unitOfWork = new UnitOfWork();
         }
-        public bool InsertOrUpdateUser(UserInformationDto userInformation)
+        private bool InsertOrUpdateUser(UserInformationDto userInformation)
         {
             var user = _unitOfWork.UserRepository.GetSingle(p => p.Email == userInformation.email);
             if (user != null)
@@ -50,40 +50,45 @@ namespace BusinessServices.Implementation
 
         public bool UpdateUserPreferences(UserInformationDto userInformation)
         {
-            var user = _unitOfWork.UserRepository.GetSingle(p => p.Email == userInformation.email);
-            if (user == null)
+            try
             {
                 InsertOrUpdateUser(userInformation);
-                user = _unitOfWork.UserRepository.GetSingle(p => p.Email == userInformation.email);
-            }
-            if (userInformation.facebookJSON?.likes != null)
-            {
-                SimplerNewsSQLDb db = new SimplerNewsSQLDb();
-                db.ResetUserPreferences(user.Id);
+                var user = _unitOfWork.UserRepository.GetSingle(p => p.Email == userInformation.email);
 
-                foreach (var like in userInformation.facebookJSON.likes)
+                if (userInformation.facebookJSON?.likes != null)
                 {
-                    var facebookLikeCategory =
-                        _unitOfWork.FacebookCategoryRepository.GetSingle(p => p.CategoryName == like.category);
-                    if (facebookLikeCategory != null)
+                    SimplerNewsSQLDb db = new SimplerNewsSQLDb();
+                    db.ResetUserPreferences(user.Id);
+
+                    foreach (var like in userInformation.facebookJSON.likes)
                     {
-                        var pref =
-                            _unitOfWork.UserPreferencesRepository.GetSingle(
-                                p => p.YoutubeCategoryId == facebookLikeCategory.VideoCategoryId && p.UserId == user.Id);
-                        if (pref != null)
+                        var facebookLikeCategory =
+                            _unitOfWork.FacebookCategoryRepository.GetSingle(p => p.CategoryName == like.category);
+                        if (facebookLikeCategory != null)
                         {
-                            double additionalScore = (1.0 / (DateTime.Now.Year - DateTime.Parse(like.liked_date).Year + 1));
-                            // ReSharper disable once PossibleLossOfFraction
-                            decimal addition = Convert.ToDecimal(additionalScore);
-                            pref.Score += addition;
-                            _unitOfWork.UserPreferencesRepository.Update(pref);
-                            _unitOfWork.Save();
+                            var pref =
+                                _unitOfWork.UserPreferencesRepository.GetSingle(
+                                    p => p.YoutubeCategoryId == facebookLikeCategory.VideoCategoryId && p.UserId == user.Id);
+                            if (pref != null)
+                            {
+                                double additionalScore = (1.0 / (DateTime.Now.Year - DateTime.Parse(like.liked_date).Year + 1));
+                                // ReSharper disable once PossibleLossOfFraction
+                                decimal addition = Convert.ToDecimal(additionalScore);
+                                pref.Score += addition;
+                                _unitOfWork.UserPreferencesRepository.Update(pref);
+                                _unitOfWork.Save();
+                            }
                         }
                     }
                 }
-            }
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
     }
 }

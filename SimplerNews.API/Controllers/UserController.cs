@@ -21,12 +21,12 @@ namespace SimplerNews.API.Controllers
             _userServices = ServicesFactory.GetUserServices();
         }
 
-        [HttpPost]
-        [Route("api/User/Login")]
-        public bool Login(UserInformationDto userInfo)
-        {
-            return _userServices.InsertOrUpdateUser(userInfo);
-        }
+        //[HttpPost]
+        //[Route("api/User/Login")]
+        //public bool Login(UserInformationDto userInfo)
+        //{
+        //    return _userServices.InsertOrUpdateUser(userInfo);
+        //}
 
         [HttpPost]
         [Route("api/User/UpdateInfo")]

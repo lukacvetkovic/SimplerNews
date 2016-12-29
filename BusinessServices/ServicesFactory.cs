@@ -20,6 +20,11 @@ namespace BusinessServices
             return new UserServices();
         }
 
+        public static IWeatherServices GetWeatherServices()
+        {
+            return new WeatherServices();
+        }
+
 
     }
 }
