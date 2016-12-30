@@ -97,6 +97,7 @@ namespace BusinessServices.Implementation
 
         public List<VideoDto> GetPersonalizedVideos(string token, int numberOfVideos)
         {
+            SimplerNewsSQLDb db = new SimplerNewsSQLDb();
             List<VideoDto> videoList = new List<VideoDto>();
             var user = _unitOfWork.UserRepository.GetSingle(p => p.Token == token);
             if (user == null)
@@ -120,9 +121,14 @@ namespace BusinessServices.Implementation
                     if (sum >= randomNumber)
                     {
                         var categoryId = userPreferences[i - 1].YoutubeCategoryId;
-                        var video = _unitOfWork.VideoRepository.GetFirst(p => p.PublishedAt > DateTime.Now.AddDays(-5)
-                                                                            && p.VideoCategoryId == categoryId
-                                                                            && !user.UserVideoWatched.Select(x => x.VideoId).Contains(p.Id));
+                        //var videoId  = _unitOfWork.VideoRepository.GetFirst(p => p.PublishedAt > DateTime.Now.AddDays(-5)
+                        //                                                    && p.VideoCategoryId == categoryId
+                        //                                                    && !user.UserVideoWatched.Select(x => x.VideoId).Contains(p.Id));
+
+          
+                        int videoId = db.GetVideoIdForParameters(user.Id,categoryId);
+                        
+                        var video = _unitOfWork.VideoRepository.GetByID(videoId);
 
                         if (video != null)
                         {
@@ -150,12 +156,13 @@ namespace BusinessServices.Implementation
                                 NumberOfComments = video.NumberOfComments ?? 0,
                                 Kind = video.Kind
                             };
-
-                            videoList.Add(videoDto);
+                            if (!videoList.Select(p => p.Id).Contains(videoDto.Id))
+                            {
+                                videoList.Add(videoDto);
+                            }
+                            
                         }
 
-
-                        break;
                     }
                 }
 

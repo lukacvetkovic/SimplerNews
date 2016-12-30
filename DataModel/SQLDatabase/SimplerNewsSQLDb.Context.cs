@@ -61,5 +61,18 @@ namespace DataModel.SQLDatabase
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ResetUserPreferences", userIdParameter);
         }
+    
+        public virtual int GetVideoIdForParameters(Nullable<int> userId, Nullable<int> categoryId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            var categoryIdParameter = categoryId.HasValue ?
+                new ObjectParameter("CategoryId", categoryId) :
+                new ObjectParameter("CategoryId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetVideoIdForParameters", userIdParameter, categoryIdParameter);
+        }
     }
 }

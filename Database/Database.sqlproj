@@ -81,5 +81,6 @@
     <Build Include="dbo\Tables\FacebookCategory.sql" />
     <Build Include="dbo\Stored Procedures\GetHotVideos.sql" />
     <Build Include="dbo\Stored Procedures\ResetUserPreferences.sql" />
+    <Build Include="dbo\Stored Procedures\GetVideoIdForParameters.sql" />
   </ItemGroup>
 </Project>
