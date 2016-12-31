@@ -9,6 +9,6 @@ namespace BusinessServices.Interface
 {
     public interface IWeatherServices
     {
-        WeatherInformation GetCityWeather(double latitude, double longitude);
+        OpenWeatherMapResult GetCityWeather(double latitude, double longitude);
     }
 }

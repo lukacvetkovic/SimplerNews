@@ -9,7 +9,7 @@ using BusinessEntities.Weather;
 
 namespace BusinessServices.Helpers
 {
-    public static class WeatherHelper
+    public static class YahooWeatherHelper
     {
         private static string DECODERURLStart = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22";
 
@@ -17,13 +17,20 @@ namespace BusinessServices.Helpers
 
         public static WeatherInformation GetWeatherInformationForLocation(double latitude, double longitude)
         {
+            try
+            {
+                var geolocation = ReverseGeoLookup.ReverseGeoLoc(latitude, longitude);
+                System.Threading.Thread.Sleep(3000);
+                String response = GetHelper(DECODERURLStart + geolocation.results[0].formatted_address + DECODEURLEND);
 
-            var geolocation = ReverseGeoLookup.ReverseGeoLoc(latitude, longitude);
-            String response = GetHelper(DECODERURLStart + geolocation.results[0].formatted_address+ DECODEURLEND);
+                YahooResult yahooResult = JSONHelper.Deserialize<YahooResult>(response);
 
-            YahooResult yahooResult = JSONHelper.Deserialize<YahooResult>(response);
-
-            return new WeatherInformation() { Channel = yahooResult.query.results.channel };
+                return new WeatherInformation() {Channel = yahooResult.query.results.channel};
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
         }
 

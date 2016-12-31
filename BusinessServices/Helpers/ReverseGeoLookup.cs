@@ -15,17 +15,27 @@ namespace BusinessServices.Helpers
         private static string DECODERURL = "http://maps.google.com/maps/api/geocode/json?latlng=";
         public static GeocodeResult ReverseGeoLoc(double latitude, double longitude)
         {
-            var lat = latitude.ToString().Replace(",", ".");
-            var lng = longitude.ToString().Replace(",", ".");
-            string url = DECODERURL+lat+","+lng;
-            String response = GetHelper(url);
-
-            GeocodeResult c = JSONHelper.Deserialize<GeocodeResult>(response);
-
-            if (c.status == "OK")
+            try
             {
-                return c;
+
+                var lat = latitude.ToString().Replace(",", ".");
+                var lng = longitude.ToString().Replace(",", ".");
+                string url = DECODERURL + lat + "," + lng;
+                String response = GetHelper(url);
+
+                GeocodeResult c = JSONHelper.Deserialize<GeocodeResult>(response);
+
+                if (c.status == "OK")
+                {
+                    return c;
+                }
+
             }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
 
             return null;
 

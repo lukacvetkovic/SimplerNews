@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.IO;
@@ -125,8 +126,20 @@ namespace BusinessServices.Implementation
                         //                                                    && p.VideoCategoryId == categoryId
                         //                                                    && !user.UserVideoWatched.Select(x => x.VideoId).Contains(p.Id));
 
-          
-                        int videoId = db.GetVideoIdForParameters(user.Id,categoryId);
+
+                        int videoId = -1;
+
+                        var userVideoWatched = user.UserVideoWatched.Select(p => p.VideoId).ToList();
+                        var dateFrom = DateTime.Now.AddDays(-7);
+                        var v =
+                            db.Video.FirstOrDefault(
+                                p =>
+                                    p.PublishedAt > dateFrom && p.VideoCategoryId == categoryId &&
+                                    !userVideoWatched.Contains(p.Id));
+                        if (v != null)
+                        {
+                            videoId = v.Id;
+                        }                        
                         
                         var video = _unitOfWork.VideoRepository.GetByID(videoId);
 

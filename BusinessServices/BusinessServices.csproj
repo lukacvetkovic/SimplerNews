@@ -91,9 +91,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\JSONHelper.cs" />
+    <Compile Include="Helpers\OpenWeatherMapHelper.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Helpers\ReverseGeoLookup.cs" />
-    <Compile Include="Helpers\WeatherHelper.cs" />
+    <Compile Include="Helpers\YahooWeatherHelper.cs" />
     <Compile Include="Implementation\UserServices.cs" />
     <Compile Include="Implementation\WeatherServices.cs" />
     <Compile Include="Interface\IUserServices.cs" />

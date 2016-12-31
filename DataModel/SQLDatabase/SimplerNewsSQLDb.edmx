@@ -247,6 +247,10 @@
           <FunctionImport Name="ResetUserPreferences">
           <Parameter Name="UserId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="GetVideoIdForParameters">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="CategoryId" Mode="In" Type="Int32" />
+          </FunctionImport>
           <EntitySet Name="FacebookCategory" EntityType="SimplerNewsDbModel.FacebookCategory" />
           <EntitySet Name="User" EntityType="SimplerNewsDbModel.User" />
           <EntitySet Name="UserPreferences" EntityType="SimplerNewsDbModel.UserPreferences" />
@@ -287,10 +291,6 @@
             <End Role="Video" EntitySet="Video" />
             <End Role="VideoTag" EntitySet="VideoTag" />
           </AssociationSet>
-          <FunctionImport Name="GetVideoIdForParameters">
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
-            <Parameter Name="CategoryId" Mode="In" Type="Int32" />
-          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="GetHotVideos_Result">
           <Property Type="Int32" Name="Id" Nullable="false" />
@@ -526,6 +526,7 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="ResetUserPreferences" FunctionName="SimplerNewsDbModel.Store.ResetUserPreferences" />
+          <FunctionImportMapping FunctionImportName="GetVideoIdForParameters" FunctionName="SimplerNewsDbModel.Store.GetVideoIdForParameters" />
           <EntitySetMapping Name="FacebookCategory">
             <EntityTypeMapping TypeName="SimplerNewsDbModel.FacebookCategory">
               <MappingFragment StoreEntitySet="FacebookCategory">
@@ -613,7 +614,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetVideoIdForParameters" FunctionName="SimplerNewsDbModel.Store.GetVideoIdForParameters" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

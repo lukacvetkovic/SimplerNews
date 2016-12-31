@@ -11,9 +11,9 @@ namespace BusinessServices.Implementation
 {
     public class WeatherServices : IWeatherServices
     {
-        public WeatherInformation GetCityWeather(double latitude, double longitude)
+        public OpenWeatherMapResult GetCityWeather(double latitude, double longitude)
         {
-            return WeatherHelper.GetWeatherInformationForLocation(latitude, longitude);
+            return OpenWeatherMapHelper.GetWeatherInformationForLocation(latitude, longitude);
         }
     }
 }

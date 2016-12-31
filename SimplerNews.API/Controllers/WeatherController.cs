@@ -19,7 +19,7 @@ namespace SimplerNews.API.Controllers
             _weatherServices = ServicesFactory.GetWeatherServices();
         }
 
-        public WeatherInformation Get(double latitude, double longitude)
+        public OpenWeatherMapResult Get(double latitude, double longitude)
         {
             return _weatherServices.GetCityWeather(latitude, longitude);
         }
